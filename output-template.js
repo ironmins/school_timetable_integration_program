@@ -786,31 +786,199 @@ td .details { margin-top: 6px; line-height: 1.3; }
     .result-list { grid-template-columns: 1fr; }
 }
 
-/* 인쇄 */
+/* ============================================================
+   인쇄 — 화면 디자인 충실 재현 + 깔끔한 PDF
+   ============================================================ */
+@page {
+    size: A4 portrait;
+    margin: 8mm;
+}
+
 @media print {
-    body { background: white !important; padding: 0 !important; margin: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    #app-container { border: 0 !important; border-radius: 0 !important; padding: 15px !important; max-width: 100% !important; background: #fff !important; }
-    #search-section, .schedule-actions, .tab-navigation, .clock-container, .footer-credit, .teacher-sidebar, .swap-modal-overlay, .student-list-modal { display: none !important; }
-    
-    /* 교사별 레이아웃 인쇄 */
-    .teacher-layout { display: block !important; }
-    .teacher-main-content { width: 100% !important; }
-    .teacher-table-wrap { 
-        border: 1px solid #ccc !important; 
-        border-radius: 14px !important; 
-        box-shadow: none !important; 
-        overflow: hidden !important;
-        max-width: 100% !important;
+    /* ── 1. 색상 강제 출력 ── */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
+
+    /* ── 2. 배경/컨테이너 초기화 ── */
+    body {
+        background: #fff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    #app-container {
+        border: 0 !important;
+        border-radius: 0 !important;
+        padding: 6mm !important;
+        margin: 0 !important;
+        max-width: 100% !important;
+        background: #fff !important;
+        backdrop-filter: none !important;
+        box-shadow: none !important;
+    }
+
+    /* ── 3. UI 전용 요소 완전 숨김 ── */
+    #search-section,
+    .tab-navigation,
+    .clock-container,
+    .footer-credit,
+    .teacher-sidebar,
+    .swap-modal-overlay,
+    .student-list-modal,
+    .schedule-actions,
+    .favorite-chips,
+    .favorites-section,
+    .student-list-btn,
+    .student-list-slot,
+    .today-badge,
+    .autocomplete-dropdown {
+        display: none !important;
+    }
+
+    /* ── 4. 제목 — 잘림 방지 ── */
+    h1 {
+        font-size: 14pt !important;
+        margin-bottom: 3mm !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+    }
+    .title-icon {
+        height: 1.5em !important;
+        max-width: 100px !important;
+    }
+    .schedule-header {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 8px !important;
+    }
+    .schedule-info h2 {
+        font-size: 13pt !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+    }
+    .ext-badge {
+        font-size: 10pt !important;
+        padding: 2px 8px !important;
+    }
+
+    /* ── 5. 오늘 하이라이트/클릭 UI 제거 ── */
+    .today-cell {
+        border-left-width: 1px !important;
+        border-right-width: 1px !important;
+    }
+    tr:last-child .today-cell {
+        border-bottom-width: 1px !important;
+    }
+    tbody td.clickable-cell::after {
+        display: none !important;
+    }
+    tbody td.clickable-cell {
+        cursor: default !important;
+        box-shadow: none !important;
+    }
+
+    /* ── 6. 테이블 공통 — 라운드 모서리 유지 + 화면 비율 재현 ── */
+    .table-container,
+    .teacher-table-wrap {
+        overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-shadow: none !important;
+        /* ★ 라운드 모서리 유지 */
+        border-radius: 14px !important;
+        border: 1px solid #b0b8c8 !important;
+    }
+    table,
     .teacher-table-wrap table {
         width: 100% !important;
         min-width: 0 !important;
-        table-layout: fixed !important;
-        font-size: 11pt !important;
+        font-size: 9.5pt !important;
     }
-    .teacher-table-wrap thead th {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+
+    /* sticky 해제 — 인쇄 시 헤더 겹침 방지 */
+    thead th {
+        position: static !important;
+    }
+    .student-list-table th {
+        position: static !important;
+    }
+
+    /* 헤더 라운드 유지 */
+    thead tr:first-child th:first-child {
+        border-top-left-radius: 13px !important;
+    }
+    thead tr:first-child th:last-child {
+        border-top-right-radius: 13px !important;
+    }
+    /* 마지막 행 라운드 */
+    tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 13px !important;
+    }
+    tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 13px !important;
+    }
+
+    /* ── 7. 학생별/교실별 일반 테이블 — 셀 고정 높이 ── */
+    tbody td {
+        height: 68px !important;
+        min-height: 68px !important;
+        max-height: 68px !important;
+        padding: 4px 3px !important;
+        overflow: hidden !important;
+    }
+    thead th {
+        padding: 8px 4px !important;
+    }
+
+    /* 과목명/칩 인쇄 크기 */
+    td .subject-name {
+        font-size: 9.5pt !important;
+        margin-bottom: 2px !important;
+    }
+    .location-chip {
+        font-size: 8pt !important;
+        padding: 1px 6px !important;
+    }
+    .teacher-name {
+        font-size: 8pt !important;
+        padding: 1px 6px !important;
+    }
+    .elective-class-badge {
+        font-size: 8pt !important;
+        min-width: 18px !important;
+        height: 18px !important;
+        padding: 0 5px !important;
+        margin-right: 4px !important;
+    }
+    .details {
+        margin-top: 3px !important;
+        gap: 3px !important;
+    }
+    .entry-divider {
+        margin: 4px 0 !important;
+    }
+
+    /* 벨타임 */
+    .bell-time {
+        font-size: 8pt !important;
+    }
+
+    /* ── 8. 교사별 레이아웃 — 사이드바 제거 + 셀 균일 높이 ── */
+    .teacher-layout {
+        display: block !important;
+    }
+    .teacher-main-content {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .teacher-subject-cell {
+        cursor: default !important;
+    }
+
+    /* ★ 교사 테이블 셀 균일 높이 — 내용에 관계없이 동일 */
+    .teacher-table-wrap tbody tr {
+        height: 80px !important;
     }
     .teacher-table-wrap tbody td,
     .teacher-subject-cell,
@@ -819,56 +987,197 @@ td .details { margin-top: 6px; line-height: 1.3; }
         height: 80px !important;
         min-height: 80px !important;
         max-height: 80px !important;
-    }
-    .teacher-table-wrap tbody tr {
-        height: 80px !important;
+        overflow: hidden !important;
     }
     .teacher-subject-cell > div {
         height: 80px !important;
         max-height: 80px !important;
-    }
-
-    /* 교사 시간표 인쇄 시 학생목록 버튼만 숨김 (화면에서는 정상 표시) */
-    .teacher-table-wrap .student-list-btn {
-        display: none !important;
-    }
-    
-    /* 공통 테이블 인쇄 */
-    .table-container {
-        border: 1px solid #ccc !important;
-        border-radius: 14px !important;
-        box-shadow: none !important;
         overflow: hidden !important;
     }
-    
-    h1 { font-size: 16pt !important; }
-    table { min-width: 0 !important; }
-    .today-cell { border: none !important; }
-    .today-header { background-color: var(--card-background) !important; color: var(--text-color) !important; }
-    .today-badge { display: none; }
-    tbody td.clickable-cell::after { display: none; }
-    .student-print-page { page-break-before: always !important; page-break-inside: avoid !important; }
-    .student-print-page:first-child { page-break-before: auto !important; }
-    
-    /* 포켓사이즈 인쇄 */
+    .period-label {
+        font-size: 10pt !important;
+    }
+    .period-time {
+        font-size: 8pt !important;
+    }
+
+    /* 교사 테이블 라운드 */
+    .teacher-table-wrap {
+        border-radius: 14px !important;
+        border: 1px solid #b0b8c8 !important;
+    }
+    .teacher-table-wrap thead tr:first-child th:first-child {
+        border-top-left-radius: 13px !important;
+    }
+    .teacher-table-wrap thead tr:first-child th:last-child {
+        border-top-right-radius: 13px !important;
+    }
+    .teacher-table-wrap tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 13px !important;
+    }
+    .teacher-table-wrap tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 13px !important;
+    }
+
+    /* ── 9. 반별 일반 인쇄 — 학생별 페이지 분리 ── */
+    .class-schedule-print-container {
+        display: block !important;
+    }
+    .student-print-page {
+        page-break-before: always !important;
+        page-break-after: auto !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 0 !important;
+    }
+    .student-print-page:first-child {
+        page-break-before: auto !important;
+    }
+
+    /* ── 10. ★ 포켓사이즈 인쇄 — 한 장에 4명, 화면 비율 유지 ── */
+    body.pocket-size h1,
+    body.pocket-size .schedule-header:first-of-type {
+        display: none !important;
+    }
+
     body.pocket-size .class-schedule-print-container {
-        display: grid !important; grid-template-columns: repeat(2, 1fr) !important;
-        grid-gap: 2mm !important; max-width: 200mm !important; margin: 0 auto !important;
-        padding: 3mm !important; page-break-inside: avoid !important; page-break-after: always !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-rows: repeat(2, auto) !important;
+        grid-gap: 1.5mm !important;
+        width: 100% !important;
+        max-width: 194mm !important;
+        max-height: 279mm !important;
+        margin: 0 auto !important;
+        padding: 2mm !important;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+        page-break-after: always !important;
     }
+    body.pocket-size .class-schedule-print-container:last-child {
+        page-break-after: auto !important;
+    }
+    body.pocket-size .pocket-page-break {
+        page-break-before: always !important;
+    }
+
     body.pocket-size .student-print-page {
-        max-height: 100mm !important; margin: 0 !important; padding: 2mm !important;
-        border: 0.5px solid #666 !important; page-break-inside: avoid !important;
-        page-break-before: auto !important; overflow: hidden !important;
+        width: 100% !important;
+        max-height: 135mm !important;
+        margin: 0 !important;
+        padding: 1.5mm !important;
+        border: 0.5px solid #888 !important;
+        border-radius: 6px !important;
+        page-break-inside: avoid !important;
+        page-break-before: auto !important;
+        page-break-after: auto !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
     }
-    body.pocket-size .schedule-header { display: flex !important; margin-bottom: 2mm !important; padding: 0 !important; }
-    body.pocket-size h1, body.pocket-size .schedule-actions { display: none !important; }
-    body.pocket-size .schedule-info h2 { font-size: 8pt !important; margin: 0 !important; text-align: left !important; color: #000 !important; }
-    body.pocket-size .bell-time { display: none !important; }
-    body.pocket-size .student-print-page table { font-size: 5pt !important; table-layout: fixed !important; }
-    body.pocket-size .student-print-page th, body.pocket-size .student-print-page td { padding: 0.5mm !important; height: 10mm !important; font-size: 6pt !important; border: 0.3px solid #999 !important; overflow: hidden !important; }
-    body.pocket-size .subject-name { font-size: 5.5pt !important; font-weight: bold !important; }
-    body.pocket-size .location-chip, body.pocket-size .teacher-name { font-size: 4.5pt !important; padding: 0 1px !important; display: inline !important; }
+    /* 포켓 — 학생명 헤더 */
+    body.pocket-size .student-print-page .schedule-header {
+        display: flex !important;
+        margin-bottom: 0.5mm !important;
+        padding: 0 !important;
+    }
+    body.pocket-size .student-print-page .schedule-info h2 {
+        font-size: 7pt !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+    }
+    body.pocket-size .student-print-page .bell-time {
+        display: none !important;
+    }
+
+    /* 포켓 — 테이블 */
+    body.pocket-size .student-print-page .table-container {
+        border-radius: 4px !important;
+        box-shadow: none !important;
+        border-width: 0.5px !important;
+    }
+    body.pocket-size .student-print-page table {
+        font-size: 5pt !important;
+        table-layout: fixed !important;
+    }
+    body.pocket-size .student-print-page thead th {
+        position: static !important;
+        padding: 1mm 0.3mm !important;
+        font-size: 5pt !important;
+        line-height: 1.1 !important;
+    }
+    body.pocket-size .student-print-page tbody td {
+        padding: 0.3mm 0.2mm !important;
+        height: 14mm !important;
+        min-height: 14mm !important;
+        max-height: 14mm !important;
+        font-size: 5pt !important;
+        line-height: 1.15 !important;
+        border-width: 0.3px !important;
+        overflow: hidden !important;
+        vertical-align: middle !important;
+    }
+    /* 포켓 — 교시 열 */
+    body.pocket-size .student-print-page tbody td:first-child {
+        font-size: 5pt !important;
+        font-weight: 600 !important;
+    }
+
+    /* ★ 포켓 — 과목명/칩 비율 최적화 (여백 최소화) */
+    body.pocket-size .student-print-page .subject-name {
+        font-size: 5pt !important;
+        font-weight: 700 !important;
+        margin-bottom: 0 !important;
+        line-height: 1.15 !important;
+    }
+    body.pocket-size .student-print-page .details {
+        margin-top: 0.5mm !important;
+        gap: 0.5mm !important;
+        line-height: 1 !important;
+    }
+    body.pocket-size .student-print-page .location-chip,
+    body.pocket-size .student-print-page .teacher-name {
+        font-size: 4pt !important;
+        padding: 0 2px !important;
+        display: inline !important;
+        border: none !important;
+        background: rgba(0,0,0,0.06) !important;
+        border-radius: 2px !important;
+        line-height: 1.1 !important;
+    }
+    /* ★ 분반 칩 — 여백 최소화, 과목명과 밀착 */
+    body.pocket-size .student-print-page .elective-class-badge {
+        font-size: 4pt !important;
+        padding: 0 2px !important;
+        min-width: 10px !important;
+        height: 10px !important;
+        line-height: 10px !important;
+        margin-right: 1px !important;
+        vertical-align: middle !important;
+    }
+    body.pocket-size .student-print-page .elective-subject-line {
+        gap: 1px !important;
+        line-height: 1.1 !important;
+    }
+    body.pocket-size .student-print-page .subject-tag {
+        width: 10px !important;
+        height: 10px !important;
+        line-height: 10px !important;
+        font-size: 4pt !important;
+        margin-right: 1px !important;
+    }
+
+    /* 포켓 — 라운드 유지 */
+    body.pocket-size .student-print-page thead tr:first-child th:first-child {
+        border-top-left-radius: 3px !important;
+    }
+    body.pocket-size .student-print-page thead tr:first-child th:last-child {
+        border-top-right-radius: 3px !important;
+    }
+    body.pocket-size .student-print-page tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 3px !important;
+    }
+    body.pocket-size .student-print-page tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 3px !important;
+    }
 }
 `;
 }

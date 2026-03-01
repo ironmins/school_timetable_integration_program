@@ -272,10 +272,38 @@ thead th {
     background: var(--header-bg); color: var(--header-text);
     font-weight: 700; padding: 12px 8px; position: sticky; top: 0; z-index: 2;
 }
+/* ── 모든 탭 교시 열 — Pretendard 굵게 ── */
+tbody td:first-child {
+    font-family: 'Pretendard Variable', 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+    font-weight: 700;
+}
+tbody td:first-child .bell-time {
+    font-family: 'Pretendard Variable', 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+    font-weight: 700;
+}
 th:last-child, td:last-child { border-right: 0; }
 tbody tr:last-child td { border-bottom: 0; }
-tbody td { height: 80px; background-color: var(--card-background); transition: background-color 0.2s; }
-tbody tr:nth-child(even) td { background: var(--row-alt); }
+/* ── 학생별/반별/교실별 테이블 행 배경 ──
+   홀수 행(1,3,5,7교시) = 흰색, 짝수 행(2,4,6교시) = 테마색
+   빈 셀(.empty-cell)은 별도 표시 */
+tbody td {
+    height: 80px;
+    background-color: var(--card-background);
+    transition: background-color 0.15s ease;
+}
+tbody tr:nth-child(even) td:not(.empty-cell) {
+    background-color: var(--row-alt);
+}
+/* 빈 셀은 홀짝 관계없이 항상 empty-bg */
+tbody td.empty-cell {
+    background-color: var(--empty-bg) !important;
+}
+
+/* ── 학생별/반별/교실별 행 hover (교사탭과 동일 UX) ──
+   빈 셀 제외, 교시 셀 포함 행 전체 하이라이트 */
+.table-container tbody tr:hover td:not(.empty-cell) {
+    background: var(--row-hover) !important;
+}
 
 /* 오늘 하이라이트 (교사탭) */
 .today-header { background-color: var(--primary-color) !important; color: white !important; }

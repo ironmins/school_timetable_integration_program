@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통합 시간표 조회 HTML 생성기</title>
+    <link rel="stylesheet" as="style" crossorigin
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="generator.css">
+</head>
+<body>
+<div class="app-wrapper">
+
+    <!-- 헤더 -->
+    <header class="header">
+        <h1>🚀 통합 시간표 조회 HTML 생성기</h1>
+        <p>엑셀 파일을 업로드하고 옵션을 선택하여, 학생·반·교실·교사 통합 시간표 웹페이지를 만들어보세요.</p>
+    </header>
+
+    <!-- 스텝 인디케이터 -->
+    <div class="step-indicator">
+        <div class="step-item active" data-step="1">
+            <div class="step-number">1</div>
+            <div class="step-label">파일 업로드</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item" data-step="2">
+            <div class="step-number">2</div>
+            <div class="step-label">상세 정보</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step-item" data-step="3">
+            <div class="step-number">3</div>
+            <div class="step-label">HTML 생성</div>
+        </div>
+    </div>
+
+    <!-- ==================== STEP 1 ==================== -->
+    <div id="step1" class="step-content">
+        <div class="step-section-box">
+            <div class="step-section-header">
+                <span class="step-section-badge">STEP 1</span>
+                <h2 class="step-section-title">기본 파일 업로드</h2>
+                <p class="step-section-desc">시간표 생성에 필요한 기본 파일들을 업로드하세요.</p>
+            </div>
+            <div class="step-section-body">
+
+                <div class="section-box upload-box" id="drop-weekly">
+                    <div class="upload-icon">📅</div>
+                    <h3>주간시간표 파일 <span class="badge required">필수</span></h3>
+                    <p>전체 교사 시간표 엑셀 파일 (컴시간/APPIN 자동 감지)</p>
+                    <input type="file" id="file-weekly" accept=".xlsx,.xls,.csv" style="display:none">
+                    <div id="status-weekly" class="upload-status"></div>
+                </div>
+
+                <div class="section-box upload-box" id="drop-selection">
+                    <div class="upload-icon">👨‍🎓</div>
+                    <h3>학생별 선택과목 파일 <span class="badge required">필수</span></h3>
+                    <p>여러 개 업로드 가능</p>
+                    <input type="file" id="file-selection" accept=".xlsx,.xls" multiple style="display:none">
+                    <div id="status-selection" class="upload-status"></div>
+                </div>
+
+                <div class="upload-grid">
+                    <div class="section-box upload-box small-box" id="drop-ext">
+                        <div class="upload-icon-small">📞</div>
+                        <h4>내선번호 파일 <span class="badge">선택</span></h4>
+                        <p>이름, 번호 2열 엑셀</p>
+                        <input type="file" id="file-ext" accept=".xlsx,.xls,.csv" style="display:none">
+                        <div id="status-ext" class="upload-status-small"></div>
+                    </div>
+                    <div class="section-box upload-box small-box" id="drop-bell">
+                        <div class="upload-icon-small">⏰</div>
+                        <h4>일과 시정표 <span class="badge">선택</span></h4>
+                        <p>교시, 시간 2열 엑셀</p>
+                        <input type="file" id="file-bell" accept=".xlsx,.xls,.csv" style="display:none">
+                        <div id="status-bell" class="upload-status-small"></div>
+                    </div>
+                </div>
+
+                <button id="btn-gen-template" class="primary-btn" disabled>
+                    선택과목 정보 템플릿 생성 → 2단계로
+                </button>
+
+                <p id="step1-status" class="status-msg">주간시간표와 선택과목 파일을 모두 업로드하세요.</p>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STEP 2 ==================== -->
+    <div id="step2" class="step-content" style="display:none">
+        <div class="step-section-box">
+            <div class="step-section-header">
+                <span class="step-section-badge">STEP 2</span>
+                <h2 class="step-section-title">선택과목 상세 정보 입력 <span class="badge" style="font-size: 13px; vertical-align: middle;">선택사항</span></h2>
+                <p class="step-section-desc">교실, 교사, 축약명 등 상세 정보를 추가하면 시간표가 더 깔끔해집니다.</p>
+            </div>
+            <div class="step-section-body">
+
+                <div class="info-card">
+                    <h4>이 단계에서 할 수 있는 작업</h4>
+                    <p>• <strong>교실 정보, 담당 교사</strong> 등 상세 정보를 추가할 수 있습니다</p>
+                    <p>• <strong>과목명을 축약형으로 변경</strong>하여 시간표가 더 깔끔해집니다</p>
+                    <p>• 건너뛰어도 기본 시간표는 정상적으로 생성됩니다</p>
+                </div>
+
+                <div class="process-steps">
+                    <div class="process-step">
+                        <div class="process-step-number">1</div>
+                        <div class="process-step-title">템플릿 확인</div>
+                        <div class="process-step-desc">자동 다운로드된<br>템플릿 파일 확인</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">2</div>
+                        <div class="process-step-title">정보 수정</div>
+                        <div class="process-step-desc">엑셀에서 교실, 교사,<br>축약명 등 입력</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-step-number">3</div>
+                        <div class="process-step-title">파일 업로드</div>
+                        <div class="process-step-desc">수정한 파일을<br>아래에 업로드</div>
+                    </div>
+                </div>
+
+                <div class="section-box upload-box" id="drop-info">
+                    <div class="upload-icon">📝</div>
+                    <h3>수정한 선택과목정보.xlsx</h3>
+                    <p>템플릿을 수정했다면 여기에 드래그하거나 클릭하세요</p>
+                    <input type="file" id="file-info" accept=".xlsx,.xls" style="display:none">
+                    <div id="status-info" class="upload-status"></div>
+                </div>
+
+                <div class="btn-row">
+                    <button id="btn-redownload" class="secondary-btn" disabled>📥 템플릿 다시 다운로드</button>
+                </div>
+
+                <div class="skip-card">
+                    <h4>⏩ 건너뛰기</h4>
+                    <p>상세 정보 입력 없이 바로 3단계로 진행해도 시간표가 생성됩니다</p>
+                </div>
+
+                <button id="btn-to-step3" class="primary-btn">3단계로 진행 →</button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STEP 3 ==================== -->
+    <div id="step3" class="step-content" style="display:none">
+        <div class="step-section-box">
+            <div class="step-section-header">
+                <span class="step-section-badge">STEP 3</span>
+                <h2 class="step-section-title">최종 설정 및 HTML 생성</h2>
+                <p class="step-section-desc">테마, 기능, 표시 옵션을 선택하고 시간표를 생성하세요.</p>
+            </div>
+            <div class="step-section-body">
+
+                <!-- 페이지 제목 -->
+                <div class="section-box">
+                    <h3 class="box-title">📝 페이지 제목 설정</h3>
+                    <input type="text" id="page-title" class="custom-input"
+                           value="OOOO학년도 OO고등학교 O학기 통합 시간표"
+                           placeholder="생성될 페이지 제목을 입력하세요">
+                </div>
+
+                <!-- 학교 로고 -->
+                <div class="section-box">
+                    <h3 class="box-title">🏫 학교 로고 <span class="badge">선택</span></h3>
+                    <div class="logo-upload-container" id="drop-logo">
+                        <div class="logo-preview-wrapper">
+                            <img id="logo-preview" src="" alt="로고" style="display:none">
+                            <div id="logo-placeholder" class="logo-placeholder">로고 없음</div>
+                        </div>
+                        <div class="logo-instructions">
+                            <label for="file-logo" class="upload-label-btn">이미지 선택</label>
+                            <p>PNG, JPG 이미지를 드래그하거나 클릭하세요</p>
+                            <input type="file" id="file-logo" accept="image/*" style="display:none">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 표시 옵션 -->
+                <div class="section-box">
+                    <h3 class="box-title">📋 표시 옵션 설정</h3>
+                    <div class="checkbox-group">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="opt-color1" checked>
+                            <span class="checkmark"></span>
+                            선택반(예: A_수업)을 색상과 기호로 구분하기
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="opt-color2" checked>
+                            <span class="checkmark"></span>
+                            선택과목을 색상과 기호로 구분하기
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="opt-linebreak" checked>
+                            <span class="checkmark"></span>
+                            수업장소와 수업명을 줄바꿈으로 표시하기
+                        </label>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="opt-chip" checked>
+                            <span class="checkmark"></span>
+                            수업장소를 칩 형태로 표시하기
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 조회 기능 선택 -->
+                <div class="section-box">
+                    <h3 class="box-title">🔍 조회 기능 선택</h3>
+                    <div class="features-grid">
+                        <div class="feature-option">
+                            <label>
+                                <input type="checkbox" id="feat-student" checked>
+                                <span class="feature-icon">👨‍🎓</span>
+                                <div>
+                                    <div class="feature-title">학생별 조회</div>
+                                    <div class="feature-desc">개별 학생 시간표 검색</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="feature-option">
+                            <label>
+                                <input type="checkbox" id="feat-class" checked>
+                                <span class="feature-icon">👥</span>
+                                <div>
+                                    <div class="feature-title">반별 조회</div>
+                                    <div class="feature-desc">반 전체 시간표 + 포켓인쇄</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="feature-option">
+                            <label>
+                                <input type="checkbox" id="feat-classroom" checked>
+                                <span class="feature-icon">🏫</span>
+                                <div>
+                                    <div class="feature-title">교실별 조회</div>
+                                    <div class="feature-desc">교실 사용 현황 + 학생목록</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="feature-option">
+                            <label>
+                                <input type="checkbox" id="feat-teacher" checked>
+                                <span class="feature-icon">👨‍🏫</span>
+                                <div>
+                                    <div class="feature-title">교사별 조회</div>
+                                    <div class="feature-desc">교체/보강 탐색 + 사이드바</div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 테마 선택 -->
+                <div class="section-box">
+                    <h3 class="box-title">🎨 컬러 테마 선택 (12종)</h3>
+                    <div class="theme-grid" id="theme-grid">
+                        <!-- JS에서 동적 생성 -->
+                    </div>
+                </div>
+
+                <button id="btn-generate" class="generate-btn" disabled>
+                    파일을 업로드하면 버튼이 활성화됩니다
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 토스트 컨테이너 -->
+    <div id="toast-container"></div>
+
+    <!-- 로딩 오버레이 -->
+    <div id="loading-overlay" class="loading-overlay" style="display:none">
+        <div class="spinner"></div>
+        <div class="loading-text">생성 중입니다...</div>
+    </div>
+
+    <div class="footer-credit">
+        <p>Last updated: 2026-02-27 (KST)</p>
+        <p>Made by IRONMIN (Jeonju high school)</p>
+    </div>
+</div>
+
+    <!-- ⚠️ 순서 중요: output-template.js가 먼저 로드되어야 합니다 -->
+    <script src="output-template.js"></script>
+    <script src="generator.js"></script>
+</body>
+</html>

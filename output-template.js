@@ -315,6 +315,23 @@ tbody td.empty-cell {
 .today-cell { border-left: 2px solid var(--primary-color) !important; border-right: 2px solid var(--primary-color) !important; }
 tr:last-child .today-cell { border-bottom: 2px solid var(--primary-color) !important; }
 
+/* ── 현재 교시 하이라이트 ── */
+.current-period-label {
+    background: var(--row-hover) !important;
+}
+.current-period-badge {
+    font-size: 9px; background: var(--primary-color); color: white;
+    padding: 1px 5px; border-radius: 8px; margin-left: 4px;
+    font-weight: 800; display: inline-block; vertical-align: top;
+}
+.current-period-cell {
+    background: var(--row-hover) !important;
+}
+.current-period-cell.today-cell {
+    background: var(--surface-soft) !important;
+    box-shadow: inset 0 0 0 2.5px var(--primary-color) !important;
+}
+
 /* 클릭 가능 셀 (교사탭 교체) */
 tbody td.clickable-cell { cursor: pointer; position: relative; }
 tbody td.clickable-cell:hover { background-color: var(--empty-bg); box-shadow: inset 0 0 0 2px var(--primary-color); z-index: 10; }
@@ -860,6 +877,7 @@ td .details { margin-top: 6px; line-height: 1.3; }
     .student-list-btn,
     .student-list-slot,
     .today-badge,
+    .current-period-badge,
     .autocomplete-dropdown {
         display: none !important;
     }
@@ -897,6 +915,17 @@ td .details { margin-top: 6px; line-height: 1.3; }
     }
     tr:last-child .today-cell {
         border-bottom-width: 1px !important;
+    }
+    .current-period-label {
+        background: var(--card-background) !important;
+    }
+    .current-period-cell {
+        background: var(--card-background) !important;
+        box-shadow: none !important;
+    }
+    .current-period-cell.today-cell {
+        background: var(--card-background) !important;
+        box-shadow: none !important;
     }
     tbody td.clickable-cell::after {
         display: none !important;
@@ -2238,14 +2267,14 @@ function generateTeacherTabJS() {
         });
 
         let html = "<div class=\\"swap-modal-tabs\\">" +
-            "<button class=\\"swap-modal-tab active\\" data-tab=\\"swap-tab-basic\\" onclick=\\"switchSwapTab(event,this.getAttribute('data-tab'))\\">📋 기본 (2인)</button>" +
-            "<button class=\\"swap-modal-tab\\" data-tab=\\"swap-tab-multi\\" onclick=\\"switchSwapTab(event,this.getAttribute('data-tab'))\\">🔄 다자간 (3~4인)</button></div>";
+            "<button class=\\"swap-modal-tab active\\" data-tab=\\"swap-tab-basic\\" onclick=\\"switchSwapTab(event,this.getAttribute('data-tab'))\\">📋 기본 (2인 교체/대체)</button>" +
+            "<button class=\\"swap-modal-tab\\" data-tab=\\"swap-tab-multi\\" onclick=\\"switchSwapTab(event,this.getAttribute('data-tab'))\\">🔄 다자간 순환 교체 (3~4인)</button></div>";
 
         html += "<div id=\\"swap-tab-basic\\" class=\\"swap-tab-content active\\">";
         if (hasAlpha) {
             html += "<div class=\\"error-notice\\"><b>⚠️ 교체 불가</b><br>선택과목/분반 수업은 1:1 교체가 불가능합니다. 아래 대체/보강 교사에게 연락해주세요.</div>";
         } else {
-            html += "<div class=\\"result-section\\"><h4>🔄 1:1 맞교환 가능 선생님</h4>" +
+            html += "<div class=\\"result-section\\"><h4>🔄 1:1 맞교환 (교체) 가능 선생님</h4>" +
                 "<p style=\\"font-size:13px;color:var(--subtle-text);margin-top:-10px;margin-bottom:15px;\\">나의 빈 시간에 동일 학반(" + tClass + "반) 수업이 있고, 해당 선생님도 나의 수업 시간에 비어있는 경우입니다.</p>";
             if (swapResults.length > 0) {
                 html += "<ul class=\\"result-list\\">";
@@ -2276,7 +2305,7 @@ function generateTeacherTabJS() {
         if (hasAlpha || !tClass) {
             html += "<div class=\\"error-notice\\"><b>⚠️ 다자간 교체 불가</b><br>선택과목이거나 수업장소 정보가 없습니다.</div>";
         } else {
-            html += "<div class=\\"info-notice\\"><b>💡 다자간 순환 교체란?</b><br>3~4명의 교사가 동일 학반(" + tClass + "반) 수업을 순환 교체합니다. 각 교사는 다른 교사의 수업 시간에 비어있어야 합니다.</div>";
+            html += "<div class=\\"info-notice\\"><b>💡 다자간 순환 교체란?</b><br>1:1 맞교환이 불가능할 때, 3~4명의 교사가 동일 학반(" + tClass + "반) 수업을 순환 교체합니다. 각 교사는 다른 교사의 수업 시간에 비어있어야 하며, 모두 같은 학반 수업이어야 합니다.</div>";
             html += "<div id=\\"multi-swap-results\\"><div class=\\"loading-spinner\\"><div class=\\"spinner-anim\\"></div>순환 교체 경로 탐색 중...</div></div>";
         }
         html += "</div>";
@@ -2505,6 +2534,21 @@ function generateTeacherTabJS() {
         const todayIdx = new Date().getDay() - 1;
         const days     = ["월","화","수","목","금"];
 
+        var currentPeriod = -1;
+        (function() {
+            var now = new Date();
+            var nowMin = now.getHours() * 60 + now.getMinutes();
+            for (var p = 1; p <= 7; p++) {
+                var ts = bellSchedule[p];
+                if (!ts) continue;
+                var m = String(ts).match(/(\\d{1,2}):(\\d{2})\\s*[~\\-]\\s*(\\d{1,2}):(\\d{2})/);
+                if (!m) continue;
+                var startMin = parseInt(m[1],10)*60 + parseInt(m[2],10);
+                var endMin = parseInt(m[3],10)*60 + parseInt(m[4],10);
+                if (nowMin >= startMin && nowMin < endMin) { currentPeriod = p; break; }
+            }
+        })();
+
         let html = "<div class=\\"schedule-header\\">" +
             "<div class=\\"schedule-info\\"><h2>" + teacher.name + " 선생님 " + extNum + "</h2></div>" +
             "<div class=\\"schedule-actions\\">" +
@@ -2523,12 +2567,16 @@ function generateTeacherTabJS() {
 
         for (let i = 0; i < 7; i++) {
             const pNum    = i + 1;
+            const isCurrent = pNum === currentPeriod && todayIdx >= 0 && todayIdx < 5;
             const timeStr = bellSchedule[pNum] ? "<br><span class=\\"period-time\\">(" + bellSchedule[pNum] + ")</span>" : "";
-            html += "<tr><td class=\\"period-label\\">" + pNum + "교시" + timeStr + "</td>";
+            const periodBadge = isCurrent ? " <span class=\\"current-period-badge\\">현재</span>" : "";
+            const periodCls = isCurrent ? "period-label current-period-label" : "period-label";
+            html += "<tr><td class=\\"" + periodCls + "\\">" + pNum + "교시" + periodBadge + timeStr + "</td>";
             days.forEach(function(day, di) {
                 const cellData = getCachedCell(teacherName, day, i);
                 const isToday  = di === todayIdx;
-                const todayCls = isToday ? " today-cell" : "";
+                const currentCls = isCurrent ? " current-period-cell" : "";
+                const todayCls = (isToday ? " today-cell" : "") + currentCls;
                 if (cellData && String(cellData).trim() !== "") {
                     const sub = renderTeacherCell(teacherName, day, i, cellData);
                     if (sub.isEmpty) {

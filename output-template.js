@@ -908,13 +908,42 @@ td .details { margin-top: 6px; line-height: 1.3; }
         padding: 2px 8px !important;
     }
 
-    /* ── 5. 오늘 하이라이트/클릭 UI 제거 ── */
-    .today-cell {
-        border-left-width: 1px !important;
-        border-right-width: 1px !important;
+    /* ── 5. 오늘/현재교시 하이라이트 — 인쇄 시 완전 제거 ── */
+    .today-header {
+        background: var(--header-bg) !important;
+        color: var(--header-text) !important;
     }
-    tr:last-child .today-cell {
-        border-bottom-width: 1px !important;
+    .today-cell {
+        border: inherit !important;
+        border-right: 1px solid var(--line-soft) !important;
+        border-bottom: 1px solid var(--line-soft) !important;
+    }
+    .today-cell:last-child {
+        border-right: 0 !important;
+    }
+    tbody tr:last-child .today-cell {
+        border-bottom: 0 !important;
+    }
+    .today-cell:not(.empty-cell) {
+        background: var(--card-background) !important;
+    }
+    tbody tr:nth-child(even) .today-cell:not(.empty-cell) {
+        background: var(--row-alt) !important;
+    }
+    .current-period-label {
+        background: var(--card-background) !important;
+        color: var(--text-color) !important;
+    }
+    .current-period-cell {
+        background: var(--card-background) !important;
+        box-shadow: none !important;
+    }
+    .current-period-cell.today-cell {
+        background: var(--card-background) !important;
+        box-shadow: none !important;
+    }
+    tbody tr:nth-child(even) .current-period-cell:not(.empty-cell) {
+        background: var(--row-alt) !important;
     }
     .current-period-label {
         background: var(--card-background) !important;
@@ -1610,6 +1639,21 @@ function generateStudentTabJS() {
         if (parts.length===2 && student.number) sid = parts[0]+parts[1].padStart(2,'0')+String(student.number).padStart(2,'0');
         const displayName = sid ? student.name+' ('+sid+')' : student.name;
 
+        var todayIdx = new Date().getDay() - 1;
+        var currentPeriod = -1;
+        (function() {
+            var now = new Date();
+            var nowMin = now.getHours() * 60 + now.getMinutes();
+            for (var p = 1; p <= 7; p++) {
+                var ts = bellSchedule[p];
+                if (!ts) continue;
+                var m = String(ts).match(/(\\d{1,2}):(\\d{2})\\s*[~\\-]\\s*(\\d{1,2}):(\\d{2})/);
+                if (!m) continue;
+                var startMin = parseInt(m[1],10)*60 + parseInt(m[2],10);
+                var endMin = parseInt(m[3],10)*60 + parseInt(m[4],10);
+                if (nowMin >= startMin && nowMin < endMin) { currentPeriod = p; break; }
+            }
+        })();
         let html = '<div class="schedule-header">' +
             '<div class="schedule-info"><h2>'+displayName+'</h2></div>' +
             '<div class="schedule-actions">' +
@@ -1617,17 +1661,26 @@ function generateStudentTabJS() {
                     (isFav?'⭐ 즐겨찾기됨':'☆ 즐겨찾기')+'</button>' +
                 '<button class="action-btn" onclick="window.print()">🖨️ 인쇄</button>' +
             '</div></div>' +
-            '<div class="table-container"><table><thead><tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr></thead><tbody>';
+            '<div class="table-container"><table><thead><tr><th>교시</th>' +
+            ['월','화','수','목','금'].map(function(d,i){ return '<th class="'+(i===todayIdx?'today-header':'')+'">'+d+(i===todayIdx?' <span class="today-badge">오늘</span>':'')+'</th>'; }).join('') +
+            '</tr></thead><tbody>';
 
         for (let i = 0; i < student.maxPeriods; i++) {
-            const timeStr = bellSchedule[i+1] ? '<br><span class="bell-time" style="font-size:11px;color:var(--subtle-text);font-weight:500;">('+bellSchedule[i+1]+')</span>' : '';
-            html += '<tr><td>'+(i+1)+'교시'+timeStr+'</td>';
+            const pNum = i + 1;
+            const isCurrent = pNum === currentPeriod && todayIdx >= 0 && todayIdx < 5;
+            const timeStr = bellSchedule[pNum] ? '<br><span class="bell-time" style="font-size:11px;color:var(--subtle-text);font-weight:700;font-family:Pretendard,sans-serif;">('+bellSchedule[pNum]+')</span>' : '';
+            const periodBadge = isCurrent ? ' <span class="current-period-badge">현재</span>' : '';
+            const periodCls = isCurrent ? 'current-period-label' : '';
+            html += '<tr><td class="'+periodCls+'">'+pNum+'교시'+periodBadge+timeStr+'</td>';
             days.forEach((day, di) => {
+                const isToday = di === todayIdx;
+                const todayCls = isToday ? ' today-cell' : '';
+                const currentCls = isCurrent ? ' current-period-cell' : '';
                 if (i < (student.periodCounts[di]||0)) {
                     const content = student.schedule[day][i] || '';
-                    html += '<td>'+(content||'<span class="empty-cell-label"></span>')+'</td>';
+                    html += '<td class="'+todayCls+currentCls+'">'+(content||'<span class="empty-cell-label"></span>')+'</td>';
                 } else {
-                    html += '<td class="empty-cell"></td>';
+                    html += '<td class="empty-cell'+todayCls+currentCls+'"></td>';
                 }
             });
             html += '</tr>';
@@ -1670,6 +1723,21 @@ function generateClassTabJS() {
         const days = ['월','화','수','목','금'];
         const maxP = Math.max(...students.map(s => s.maxPeriods));
 
+        var todayIdx = new Date().getDay() - 1;
+        var currentPeriod = -1;
+        (function() {
+            var now = new Date();
+            var nowMin = now.getHours() * 60 + now.getMinutes();
+            for (var p = 1; p <= 7; p++) {
+                var ts = bellSchedule[p];
+                if (!ts) continue;
+                var m = String(ts).match(/(\\d{1,2}):(\\d{2})\\s*[~\\-]\\s*(\\d{1,2}):(\\d{2})/);
+                if (!m) continue;
+                var startMin = parseInt(m[1],10)*60 + parseInt(m[2],10);
+                var endMin = parseInt(m[3],10)*60 + parseInt(m[4],10);
+                if (nowMin >= startMin && nowMin < endMin) { currentPeriod = p; break; }
+            }
+        })();
         let html = '<div class="schedule-header">' +
             '<div class="schedule-info"><h2>'+classId+'반 시간표 <small>(총 '+students.length+'명)</small></h2></div>' +
             '<div class="schedule-actions">' +
@@ -1691,15 +1759,24 @@ function generateClassTabJS() {
                     '<div class="schedule-header" style="justify-content: flex-start; margin-bottom: 12px; padding: 0 4px;">' +
                     '<div class="schedule-info"><h2 style="font-size: 1.3rem;">'+displayName+'</h2></div>' +
                 '</div>' +
-                '<div class="table-container"><table><thead><tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr></thead><tbody>';
+                '<div class="table-container"><table><thead><tr><th>교시</th>' +
+                ['월','화','수','목','금'].map(function(d,i){ return '<th class="'+(i===todayIdx?'today-header':'')+'">'+d+(i===todayIdx?' <span class="today-badge">오늘</span>':'')+'</th>'; }).join('') +
+                '</tr></thead><tbody>';
             for (let i = 0; i < maxP; i++) {
-                const timeStr = bellSchedule[i+1] ? '<br><span class="bell-time" style="font-size:11px;color:var(--subtle-text);font-weight:500;">('+bellSchedule[i+1]+')</span>' : '';
-                html += '<tr><td>'+(i+1)+'교시'+timeStr+'</td>';
+                const pNum = i + 1;
+                const isCurrent = pNum === currentPeriod && todayIdx >= 0 && todayIdx < 5;
+                const timeStr = bellSchedule[pNum] ? '<br><span class="bell-time" style="font-size:11px;color:var(--subtle-text);font-weight:700;font-family:Pretendard,sans-serif;">('+bellSchedule[pNum]+')</span>' : '';
+                const periodBadge = isCurrent ? ' <span class="current-period-badge">현재</span>' : '';
+                const periodCls = isCurrent ? 'current-period-label' : '';
+                html += '<tr><td class="'+periodCls+'">'+pNum+'교시'+periodBadge+timeStr+'</td>';
                 days.forEach((day, di) => {
+                    const isToday = di === todayIdx;
+                    const todayCls = isToday ? ' today-cell' : '';
+                    const currentCls = isCurrent ? ' current-period-cell' : '';
                     if (i < (student.periodCounts[di]||0)) {
-                        html += '<td>'+(student.schedule[day][i]||'')+'</td>';
+                        html += '<td class="'+todayCls+currentCls+'">'+(student.schedule[day][i]||'')+'</td>';
                     } else {
-                        html += '<td class="empty-cell"></td>';
+                        html += '<td class="empty-cell'+todayCls+currentCls+'"></td>';
                     }
                 });
                 html += '</tr>';
@@ -1858,19 +1935,43 @@ function generateClassroomTabJS() {
         closeStudentListModal();
         clearStudentListStore();
 
+        var todayIdx = new Date().getDay() - 1;
+        var currentPeriod = -1;
+        (function() {
+            var now = new Date();
+            var nowMin = now.getHours() * 60 + now.getMinutes();
+            for (var p = 1; p <= 7; p++) {
+                var ts = bellSchedule[p];
+                if (!ts) continue;
+                var m = String(ts).match(/(\\d{1,2}):(\\d{2})\\s*[~\\-]\\s*(\\d{1,2}):(\\d{2})/);
+                if (!m) continue;
+                var startMin = parseInt(m[1],10)*60 + parseInt(m[2],10);
+                var endMin = parseInt(m[3],10)*60 + parseInt(m[4],10);
+                if (nowMin >= startMin && nowMin < endMin) { currentPeriod = p; break; }
+            }
+        })();
         let html = '<div class="schedule-header">' +
             '<div class="schedule-info"><h2>'+roomId+' 교실 사용 현황</h2></div>' +
             '<div class="schedule-actions">' +
                 '<button class="action-btn" onclick="window.print()">🖨️ 인쇄</button>' +
             '</div></div>' +
-            '<div class="table-container"><table><thead><tr><th>교시</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th></tr></thead><tbody>';
+            '<div class="table-container"><table><thead><tr><th>교시</th>' +
+            ['월','화','수','목','금'].map(function(d,i){ return '<th class="'+(i===todayIdx?'today-header':'')+'">'+d+(i===todayIdx?' <span class="today-badge">오늘</span>':'')+'</th>'; }).join('') +
+            '</tr></thead><tbody>';
 
         for (let i = 0; i < 7; i++) {
-            const timeStr = bellSchedule[i+1] ? '<br><span class="bell-time" style="font-size:11px;color:var(--subtle-text);font-weight:500;">('+bellSchedule[i+1]+')</span>' : '';
-            html += '<tr><td>'+(i+1)+'교시'+timeStr+'</td>';
-            days.forEach(day => {
+            const pNum = i + 1;
+            const isCurrent = pNum === currentPeriod && todayIdx >= 0 && todayIdx < 5;
+            const timeStr = bellSchedule[pNum] ? '<br><span class="bell-time" style="font-size:11px;color:var(--subtle-text);font-weight:700;font-family:Pretendard,sans-serif;">('+bellSchedule[pNum]+')</span>' : '';
+            const periodBadge = isCurrent ? ' <span class="current-period-badge">현재</span>' : '';
+            const periodCls = isCurrent ? 'current-period-label' : '';
+            html += '<tr><td class="'+periodCls+'">'+pNum+'교시'+periodBadge+timeStr+'</td>';
+            days.forEach((day, di) => {
                 const pk = day+(i+1);
                 const info = data[pk] || [];
+                const isToday = di === todayIdx;
+                const todayCls = isToday ? ' today-cell' : '';
+                const currentCls = isCurrent ? ' current-period-cell' : '';
                 if (info.length > 0) {
                     let filtered = info;
                     const hasElective = info.some(x => x.electiveClassName);
@@ -1907,9 +2008,9 @@ function generateClassroomTabJS() {
                         }
                         return subjHtml + detailsHtml;
                     }).join('<hr class="entry-divider">');
-                    html += '<td>'+cellContent+'</td>';
+                    html += '<td class="'+todayCls+currentCls+'">'+cellContent+'</td>';
                 } else {
-                    html += '<td class="empty-cell"></td>';
+                    html += '<td class="empty-cell'+todayCls+currentCls+'"></td>';
                 }
             });
             html += '</tr>';

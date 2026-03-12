@@ -1166,7 +1166,7 @@ td .details { margin-top: 6px; line-height: 1.3; }
         padding: 0 !important;
     }
     body.pocket-size .student-print-page .schedule-info h2 {
-        font-size: 7pt !important;
+        font-size: 7.5pt !important;
         margin: 0 !important;
         white-space: nowrap !important;
     }
@@ -1181,53 +1181,65 @@ td .details { margin-top: 6px; line-height: 1.3; }
         border-width: 0.5px !important;
     }
     body.pocket-size .student-print-page table {
-        font-size: 5pt !important;
+        font-size: 6pt !important;
         table-layout: fixed !important;
     }
     body.pocket-size .student-print-page thead th {
         position: static !important;
         padding: 1mm 0.3mm !important;
-        font-size: 5pt !important;
+        font-size: 6pt !important;
         line-height: 1.1 !important;
     }
     body.pocket-size .student-print-page tbody td {
-        padding: 0.3mm 0.2mm !important;
-        height: 14mm !important;
-        min-height: 14mm !important;
-        max-height: 14mm !important;
-        font-size: 5pt !important;
-        line-height: 1.15 !important;
+        padding: 0.4mm 0.3mm !important;
+        height: 14.5mm !important;
+        min-height: 14.5mm !important;
+        max-height: 14.5mm !important;
+        font-size: 6pt !important;
+        line-height: 1.2 !important;
         border-width: 0.3px !important;
         overflow: hidden !important;
         vertical-align: middle !important;
     }
     /* 포켓 — 교시 열 */
     body.pocket-size .student-print-page tbody td:first-child {
-        font-size: 5pt !important;
+        font-size: 6pt !important;
         font-weight: 600 !important;
     }
 
-    /* ★ 포켓 — 과목명/칩 비율 최적화 (여백 최소화) */
+    /* ★ 포켓 — 과목명 (기본 3~4글자: 7pt, 줄바꿈 없음) */
     body.pocket-size .student-print-page .subject-name {
-        font-size: 5pt !important;
+        font-size: 7pt !important;
         font-weight: 700 !important;
         margin-bottom: 0 !important;
-        line-height: 1.15 !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
+
+    /* ★ 5글자 이상 긴 과목명 — JS에서 .subject-long 클래스 부여 시 축소 */
+    body.pocket-size .student-print-page .subject-name.subject-long {
+        font-size: 5.8pt !important;
+        letter-spacing: -0.3pt !important;
+    }
+
     body.pocket-size .student-print-page .details {
         margin-top: 0.5mm !important;
         gap: 0.5mm !important;
         line-height: 1 !important;
     }
+    /* ★ 강의실·교사 칩 — 과목명과의 비율 유지 (과목 7pt 기준 약 70%) */
     body.pocket-size .student-print-page .location-chip,
     body.pocket-size .student-print-page .teacher-name {
-        font-size: 4pt !important;
-        padding: 0 2px !important;
+        font-size: 5pt !important;
+        padding: 0 2.5px !important;
         display: inline !important;
         border: none !important;
         background: rgba(0,0,0,0.06) !important;
         border-radius: 2px !important;
-        line-height: 1.1 !important;
+        line-height: 1.15 !important;
+        white-space: nowrap !important;
     }
     /* ★ 분반 칩 — 여백 최소화, 과목명과 밀착 */
     body.pocket-size .student-print-page .elective-class-badge {
@@ -1242,6 +1254,8 @@ td .details { margin-top: 6px; line-height: 1.3; }
     body.pocket-size .student-print-page .elective-subject-line {
         gap: 1px !important;
         line-height: 1.1 !important;
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
     }
     body.pocket-size .student-print-page .subject-tag {
         width: 10px !important;
@@ -1249,6 +1263,35 @@ td .details { margin-top: 6px; line-height: 1.3; }
         line-height: 10px !important;
         font-size: 4pt !important;
         margin-right: 1px !important;
+    }
+
+    /* ★ 포켓 — 분반칩 + 긴 교과명(5글자+) 조합: 한 줄 강제 + 잘림 완전 방지 */
+    body.pocket-size .student-print-page .elective-subject-line.elective-long {
+        gap: 0px !important;
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+    }
+    body.pocket-size .student-print-page .elective-subject-line.elective-long .elective-class-badge {
+        font-size: 2.5pt !important;
+        padding: 0 0.8px !important;
+        min-width: 5px !important;
+        height: 6px !important;
+        line-height: 6px !important;
+        margin-right: 0.3px !important;
+    }
+    body.pocket-size .student-print-page .elective-subject-line.elective-long .subject-name {
+        font-size: 3.5pt !important;
+        letter-spacing: -0.5pt !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+    }
+    body.pocket-size .student-print-page .subject-tag {
+        width: 11px !important;
+        height: 11px !important;
+        line-height: 11px !important;
+        font-size: 5pt !important;
+        margin-right: 1.5px !important;
     }
 
     /* 포켓 — 라운드 유지 */
@@ -1687,6 +1730,17 @@ function generateStudentTabJS() {
         }
         html += '</tbody></table></div>';
         scheduleContainer.innerHTML = html;
+        // ★ 포켓사이즈용: 분반칩 + 5글자이상 교과명 → .elective-long 클래스 부여
+        scheduleContainer.querySelectorAll('.elective-subject-line').forEach(function(line) {
+            var subjEl = line.querySelector('.subject-name');
+            var badgeEl = line.querySelector('.elective-class-badge');
+            if (subjEl && badgeEl) {
+                var text = subjEl.textContent.replace(/\s/g, '');
+                if (text.length >= 5) {
+                    line.classList.add('elective-long');
+                }
+            }
+        });
     }
     `;
 }
@@ -2589,7 +2643,9 @@ function generateTeacherTabJS() {
         filter.addEventListener("input", function() {
             const q = this.value.trim().toLowerCase();
             list.querySelectorAll(".teacher-sidebar-item").forEach(function(item) {
-                item.style.display = (!q || item.dataset.teacher.toLowerCase().indexOf(q) !== -1) ? "" : "none";
+                var name = item.dataset.teacher.toLowerCase();
+                var ext = extNumbers[item.dataset.teacher] ? String(extNumbers[item.dataset.teacher]).toLowerCase() : "";
+                item.style.display = (!q || name.indexOf(q) !== -1 || ext.indexOf(q) !== -1) ? "" : "none";
             });
             list.querySelectorAll(".sidebar-section-label, .sidebar-divider").forEach(function(el) {
                 el.style.display = q.length > 0 ? "none" : "";

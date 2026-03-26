@@ -190,7 +190,6 @@ function detectTimetableFormat(data) {
         if (row3.includes('월') || row3.includes('화') || row3.includes('수')) {
             return 'formatB';
         }
-        // APPIN 감지: 상위 10행에 '번호', '교사', '시수'
         for (let i = 0; i < Math.min(10, data.length); i++) {
             const rowStr = (data[i] || []).join('');
             if (rowStr.includes('번호') && rowStr.includes('교사') && rowStr.includes('시수')) {
@@ -205,12 +204,10 @@ function detectTimetableFormat(data) {
 // 교시 구조 계산
 // ==========================================
 function calculatePeriodStructure(totalCells, weeklyRaw) {
-    // 동적 파싱 시도
     if (weeklyRaw && weeklyRaw.length >= 3) {
         const result = parseDynamicPeriodStructure(weeklyRaw, totalCells);
         if (result) return result;
     }
-    // 패턴 매칭
     const patterns = [
         [7,7,7,6,6],[7,7,6,7,6],[7,7,7,7,7],[6,6,6,6,6],
         [8,8,8,7,7],[7,7,6,6,6],[7,6,6,6,6],[8,8,7,7,7],
@@ -268,7 +265,6 @@ function processWeeklyFile(json, fileName) {
     AppState.weekly = json;
     const formatName = AppState.weeklyFormat === 'formatB' ? 'APPIN 양식' : '컴시간 양식';
 
-    // 교사별 시간표 파싱 (IRONMIN 호환)
     const schedules = parseTeacherSchedules(json, AppState.weeklyFormat);
     AppState.parsedTeacherSchedules = schedules;
 
@@ -280,7 +276,6 @@ function parseTeacherSchedules(json, format) {
     let schedules = [];
 
     if (format === 'formatB') {
-        // APPIN 포맷 파싱
         let dayHeaders = [];
         let periodHeaders = [];
         let dataStartRow = -1;
@@ -325,7 +320,6 @@ function parseTeacherSchedules(json, format) {
             }
         }
     } else {
-        // formatA (컴시간)
         let dayHeaders = [];
         let periodHeaders = [];
         let dataStartRow = -1;
@@ -339,12 +333,10 @@ function parseTeacherSchedules(json, format) {
                     const cell = row[c];
                     if (cell && typeof cell === 'string' && VALID_DAYS.includes(cell.trim()))
                         currentDay = cell.trim();
-                    // Only set dayHeader if we are within valid day columns (stop at extra stat columns)
                     if (currentDay) dayHeaders[c] = currentDay;
                 }
             }
             if (row.includes(1) && row.includes(2) && row.includes(3)) {
-                // Only use period numbers up to col 36 (beyond that are stat columns)
                 periodHeaders = row;
                 dataStartRow = i + 1;
                 break;
@@ -360,13 +352,11 @@ function parseTeacherSchedules(json, format) {
                 for (let c = 1; c < periodHeaders.length; c++) {
                     const day = dayHeaders[c];
                     const pVal = periodHeaders[c];
-                    // Skip columns without a valid day header OR where period is not a plain integer
                     if (!day || !VALID_DAYS.includes(day)) continue;
                     if (!pVal || typeof pVal !== 'number') continue;
                     const pIdx = pVal - 1;
                     if (pIdx < 0 || pIdx > 8) continue;
                     if (schedule[day] && row[c]) {
-                        // Clean _x000D_ and normalize newlines to space
                         const cleaned = String(row[c]).replace(/_x000D_/g, '').replace(/\r?\n/g, '\n').trim();
                         schedule[day][pIdx] = cleaned || null;
                     }
@@ -476,7 +466,6 @@ function checkStep1Ready() {
 }
 
 function checkStep3Ready() {
-    // info가 있든 없든 step3에서 생성 버튼 활성화 (info는 선택사항)
     if (AppState.weekly && AppState.selection.length > 0) {
         DOM.btnGenerate.disabled = false;
         DOM.btnGenerate.textContent = '통합 시간표 HTML 생성 및 다운로드 🚀';
@@ -514,7 +503,6 @@ function generateInfoTemplate() {
             return a.selectionGroup.localeCompare(b.selectionGroup, undefined, { numeric: true });
         });
 
-        // 주간시간표에서 선택과목 수업시간 추출
         const groupTimings = extractGroupTimings();
 
         const findTimeInfo = (grade, group) => {
@@ -535,10 +523,8 @@ function generateInfoTemplate() {
 
         AppState.info = templateRows;
 
-        // 엑셀 다운로드
         downloadExcel(templateRows, '선택과목정보_템플릿', '선택과목정보_템플릿.xlsx');
 
-        // UI 전환
         DOM.step2.style.display = 'block';
         DOM.step3.style.display = 'block';
         DOM.btnRedownload.disabled = false;
@@ -588,7 +574,6 @@ function extractGroupTimings() {
             i++;
         }
     } else {
-        // formatA (컴시간)
         const totalCells = weeklyRaw[0].length - 1;
         const periodStructure = calculatePeriodStructure(totalCells, weeklyRaw);
         const daysInOrder = ['월','화','수','목','금'];
@@ -693,7 +678,6 @@ function processAllData() {
     const daysInOrder = ['월','화','수','목','금'];
     let periodStructure, maxPeriods;
 
-    // --- 고정수업 추출 ---
     if (AppState.weeklyFormat === 'formatB') {
         const dayHeaders = weeklyRaw[2] || [];
         const periodHeaders = weeklyRaw[3] || [];
@@ -712,7 +696,6 @@ function processAllData() {
         maxPeriods = Math.max(...periodCounts, 0);
         periodStructure = { periodCounts, maxPeriods };
 
-        // 교사정보 수집
         const teacherInfo = {};
         for (let i = 0; i < weeklyRaw.length; i++) {
             const row = weeklyRaw[i];
@@ -736,7 +719,6 @@ function processAllData() {
             }
         }
 
-        // 과목+교실 추출
         for (let i = 4; i < weeklyRaw.length; i += 2) {
             const subjRow = weeklyRaw[i];
             const locRow = weeklyRaw[i + 1];
@@ -761,7 +743,6 @@ function processAllData() {
                                 const tn = teacherInfo[homeroom]?.[day]?.[pidx] || '';
                                 const subjStr = String(subject).trim();
 
-                                // [FIX] 덮어쓰기 방지만 유지 (공강 제외 삭제)
                                 if (fixedSchedules[homeroom].schedule[day][ai] === null) {
                                     fixedSchedules[homeroom].schedule[day][ai] = {
                                         subject: subjStr,
@@ -776,7 +757,6 @@ function processAllData() {
             });
         }
 
-        // 교실정보 보완 (특별실)
         for (let i = 4; i < weeklyRaw.length; i += 2) {
             const subjRow = weeklyRaw[i];
             const locRow = weeklyRaw[i + 1];
@@ -804,7 +784,6 @@ function processAllData() {
         }
 
     } else {
-        // formatA (컴시간)
         const totalCells = weeklyRaw.length > 0 && weeklyRaw[0].length > 1 ? weeklyRaw[0].length - 1 : 33;
         periodStructure = calculatePeriodStructure(totalCells, weeklyRaw);
         maxPeriods = periodStructure.maxPeriods;
@@ -828,11 +807,9 @@ function processAllData() {
                             const classNum = classId.substring(1).replace(/^0/, '');
                             const homeroom = `${grade}-${classNum}`;
 
-                            // '307공강 B_기하' 처럼 classId 뒤에 공강 등 접미어가 붙은 경우도 처리
                             const remainingMatch = cellStr.match(/^\d{3}\S*\s+(.*)/);
                             const remaining = remainingMatch ? remainingMatch[1].trim() : cellStr.substring(4).trim();
                             
-                            // 선택과목 판별: "B_생명과학Ⅱ", "A 수적", "C2_여행", "F_물리학" 등
                             const isElective = /^[A-Za-z][A-Za-z0-9]*[_\s]/.test(remaining)
                                             || /^[A-Za-z]$/.test(remaining);
                             
@@ -842,7 +819,7 @@ function processAllData() {
                             }
                             
                             if (isElective) {
-                                // 선택과목은 고정수업에 넣지 않음 (선택과목 배치에서 처리)
+                                // 선택과목은 고정수업에 넣지 않음
                             } else {
                                 let classroom = '';
                                 let subjectAndTeacher = remaining;
@@ -875,12 +852,10 @@ function processAllData() {
         });
     }
 
-    // --- 선택과목 정보 매핑 ---
     const electiveInfoMap = {};
     if (AppState.info && AppState.info.length > 1) {
         AppState.info.slice(1).forEach(row => {
             if (!row[0] || !row[1] || !row[2]) return;
-            // '기하(공)' 같은 괄호 표기를 '기하'로 정규화하여 학생 분반 파일의 교과명과 매칭
             const normalizedSubject = String(row[2]).replace(/\([^)]*\)/g, '').trim();
             const key = `${row[0]}_${normalizedSubject}_${row[1]}`;
             if (!electiveInfoMap[key]) electiveInfoMap[key] = [];
@@ -893,15 +868,13 @@ function processAllData() {
         });
     }
 
-    // --- 수업시간 fallback: info에 times가 없는 항목은 extractGroupTimings로 보완 ---
     const groupTimingsFallback = extractGroupTimings();
     Object.keys(electiveInfoMap).forEach(key => {
         electiveInfoMap[key].forEach(info => {
             if (!info.times) {
-                // key 형식: "학년_교과명_반명" → grade_group 추출
                 const parts = key.split('_');
                 const grade = parts[0];
-                const group = parts[parts.length - 1]; // 마지막이 반명
+                const group = parts[parts.length - 1];
                 const gtKey = `${grade}_${group}`;
                 const timings = groupTimingsFallback[gtKey] || groupTimingsFallback[`${grade}_${group.charAt(0).toUpperCase()}`];
                 if (timings && timings.length > 0) {
@@ -911,10 +884,8 @@ function processAllData() {
         });
     });
 
-    // --- info가 없거나 electiveInfoMap이 비어있는 경우: groupTimings만으로 배치 ---
     const useGroupTimingsDirect = Object.keys(electiveInfoMap).length === 0;
 
-    // --- 학생별 시간표 생성 ---
     const students = [];
     AppState.selection.forEach(file => {
         const selHeader = file.data[0];
@@ -934,7 +905,6 @@ function processAllData() {
             };
             daysInOrder.forEach(d => { student.schedule[d] = Array(student.maxPeriods).fill(''); });
 
-            // 선택과목 배치
             for (let i = 5; i < selHeader.length; i++) {
                 const subjectFromHeader = selHeader[i];
                 const selGroup = row[i];
@@ -969,7 +939,6 @@ function processAllData() {
                             });
                         });
                     } else if (useGroupTimingsDirect) {
-                        // electiveInfoMap이 전혀 없는 경우: groupTimings로 직접 배치
                         const gtKey = `${grade}_${selGroup}`;
                         const timings = groupTimingsFallback[gtKey]
                                      || groupTimingsFallback[`${grade}_${String(selGroup).charAt(0).toUpperCase()}`];
@@ -992,7 +961,6 @@ function processAllData() {
                 }
             }
 
-            // 고정과목 배치
             const fixed = fixedSchedules[student.homeroom];
             if (fixed) {
                 daysInOrder.forEach(day => {
@@ -1050,7 +1018,8 @@ function generateAndDownloadHtml() {
         student: document.getElementById('feat-student').checked,
         class: document.getElementById('feat-class').checked,
         classroom: document.getElementById('feat-classroom').checked,
-        teacher: document.getElementById('feat-teacher').checked
+        teacher: document.getElementById('feat-teacher').checked,
+        subject: document.getElementById('feat-subject').checked
     };
 
     if (!Object.values(features).some(v => v)) {
@@ -1062,10 +1031,8 @@ function generateAndDownloadHtml() {
 
     setTimeout(() => {
         try {
-            // 학생 데이터 처리
             const studentsData = processAllData();
 
-            // 옵션 수집
             const options = {
                 pageTitle: document.getElementById('page-title').value.trim() || '통합 시간표 조회 시스템',
                 logoBase64: AppState.logoBase64,
@@ -1075,25 +1042,20 @@ function generateAndDownloadHtml() {
                 optColor2: document.getElementById('opt-color2').checked,
                 optLinebreak: document.getElementById('opt-linebreak').checked,
                 optChip: document.getElementById('opt-chip').checked,
-                // 교사 전용 데이터
                 teacherSchedules: AppState.parsedTeacherSchedules,
                 extensions: AppState.extensions,
                 bellSchedule: AppState.bellSchedule,
-                // 학생 데이터
                 studentsData,
-                // 주간시간표 원본 (교실별/선생님별 재처리용)
                 weeklyData: AppState.weekly,
                 weeklyFormat: AppState.weeklyFormat
             };
 
-            // output-template.js의 함수 호출
             if (typeof generateOutputHtml !== 'function') {
                 throw new Error('output-template.js가 로드되지 않았습니다. 파일을 확인해주세요.');
             }
 
             const finalHtml = generateOutputHtml(options);
 
-            // 다운로드
             const blob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1120,13 +1082,10 @@ function generateAndDownloadHtml() {
 // 이벤트 리스너 초기화
 // ==========================================
 function init() {
-    // 드래그 앤 드롭 설정
     Object.keys(FILE_MAP).forEach(type => setupDragAndDrop(type));
 
-    // 테마 그리드 렌더링
     renderThemeGrid();
 
-    // 버튼 이벤트
     DOM.btnGenTemplate.addEventListener('click', generateInfoTemplate);
 
     DOM.btnRedownload.addEventListener('click', () => {
@@ -1145,10 +1104,7 @@ function init() {
 
     DOM.btnGenerate.addEventListener('click', generateAndDownloadHtml);
 
-    // 초기 상태
     updateStepIndicator(1);
 }
 
-// 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', init);
-

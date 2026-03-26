@@ -163,7 +163,6 @@ h1 {
 }
 .title-icon { height: 2.3em; border-radius: 10px; max-width: 150px; object-fit: contain; }
 
-/* 시계 */
 .clock-container {
     margin: 15px auto 25px; background: var(--surface-soft);
     padding: 8px 24px; border-radius: 20px; border: 1px solid var(--border-color);
@@ -172,7 +171,6 @@ h1 {
     box-shadow: 0 2px 5px rgba(0,0,0,0.05); width: fit-content;
 }
 
-/* 탭 네비게이션 */
 .tab-navigation {
     display: flex; gap: 8px; margin-bottom: 22px; padding: 7px;
     background: var(--surface-soft); border: 1px solid var(--border-color);
@@ -188,7 +186,6 @@ h1 {
 .tab-button:hover:not(.active) { background: var(--tab-hover-bg); border-color: var(--tab-hover-border); }
 .tab-button.active { background: var(--card-background); border-color: var(--active-border); color: var(--primary-color); }
 
-/* 검색 */
 #search-section {
     background: var(--surface-soft); border: 1px solid var(--border-color);
     padding: 22px; border-radius: 16px; margin-bottom: 24px;
@@ -215,7 +212,6 @@ h1 {
 .autocomplete-item:last-child { border-bottom: 0; }
 .autocomplete-item:hover, .autocomplete-item.selected { background-color: var(--surface-soft); }
 
-/* 즐겨찾기 */
 .favorites-section { margin-top: 18px; }
 .favorites-title { font-size: 13px; color: var(--subtle-text); margin-bottom: 10px; text-align: center; font-weight: 500; }
 .favorite-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
@@ -226,7 +222,6 @@ h1 {
 }
 .favorite-chip:hover { background: var(--surface-soft); border-color: var(--primary-light); transform: translateY(-1px); }
 
-/* 시간표 헤더 */
 .schedule-header {
     display: flex; justify-content: space-between; gap: 14px; align-items: flex-end;
     margin: 0 auto 14px; width: min(100%, var(--schedule-max-width));
@@ -245,7 +240,6 @@ h1 {
 .action-btn:hover { background: var(--surface-soft); border-color: var(--primary-light); }
 .action-btn.favorited { background: var(--primary-color); border-color: var(--primary-color); color: #fff; }
 
-/* 내선번호 배지 */
 .ext-badge {
     background-color: var(--surface-soft); color: var(--text-color);
     font-size: 15px; padding: 4px 12px; border-radius: 20px;
@@ -253,7 +247,6 @@ h1 {
     display: inline-flex; align-items: center; gap: 5px; font-weight: 600;
 }
 
-/* 테이블 */
 .table-container {
     border: 1px solid var(--border-color); border-radius: 14px; overflow: auto;
     background: var(--card-background); width: min(100%, var(--schedule-max-width));
@@ -272,7 +265,6 @@ thead th {
     background: var(--header-bg); color: var(--header-text);
     font-weight: 700; padding: 12px 8px; position: sticky; top: 0; z-index: 2;
 }
-/* ── 모든 탭 교시 열 — Pretendard 굵게 ── */
 tbody td:first-child {
     font-family: 'Pretendard Variable', 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
     font-weight: 700;
@@ -283,9 +275,6 @@ tbody td:first-child .bell-time {
 }
 th:last-child, td:last-child { border-right: 0; }
 tbody tr:last-child td { border-bottom: 0; }
-/* ── 학생별/반별/교실별 테이블 행 배경 ──
-   홀수 행(1,3,5,7교시) = 흰색, 짝수 행(2,4,6교시) = 테마색
-   빈 셀(.empty-cell)은 별도 표시 */
 tbody td {
     height: 80px;
     background-color: var(--card-background);
@@ -294,18 +283,13 @@ tbody td {
 tbody tr:nth-child(even) td:not(.empty-cell) {
     background-color: var(--row-alt);
 }
-/* 빈 셀은 홀짝 관계없이 항상 empty-bg */
 tbody td.empty-cell {
     background-color: var(--empty-bg) !important;
 }
-
-/* ── 학생별/반별/교실별 행 hover (교사탭과 동일 UX) ──
-   빈 셀 제외, 교시 셀 포함 행 전체 하이라이트 */
 .table-container tbody tr:hover td:not(.empty-cell) {
     background: var(--row-hover) !important;
 }
 
-/* 오늘 하이라이트 (교사탭) */
 .today-header { background-color: var(--primary-color) !important; color: white !important; }
 .today-badge {
     font-size: 10px; background: white; color: var(--primary-color);
@@ -315,7 +299,6 @@ tbody td.empty-cell {
 .today-cell { border-left: 2px solid var(--primary-color) !important; border-right: 2px solid var(--primary-color) !important; }
 tr:last-child .today-cell { border-bottom: 2px solid var(--primary-color) !important; }
 
-/* ── 현재 교시 하이라이트 ── */
 .current-period-label {
     background: var(--row-hover) !important;
 }
@@ -332,7 +315,6 @@ tr:last-child .today-cell { border-bottom: 2px solid var(--primary-color) !impor
     box-shadow: inset 0 0 0 2.5px var(--primary-color) !important;
 }
 
-/* 클릭 가능 셀 (교사탭 교체) */
 tbody td.clickable-cell { cursor: pointer; position: relative; }
 tbody td.clickable-cell:hover { background-color: var(--empty-bg); box-shadow: inset 0 0 0 2px var(--primary-color); z-index: 10; }
 tbody td.clickable-cell:hover::after {
@@ -341,11 +323,9 @@ tbody td.clickable-cell:hover::after {
     padding: 2px 6px; border-radius: 4px; font-weight: 600;
 }
 
-/* 빈 교시 */
 .empty-cell, .empty-period { background-color: var(--empty-bg) !important; color: var(--subtle-text); }
 .empty-cell-label { color: var(--subtle-text); font-size: 12px; }
 
-/* 과목 표시 */
 td .subject-name { font-weight: 700; font-size: 14px; color: var(--text-color); margin-bottom: 4px; }
 td .details { margin-top: 6px; line-height: 1.3; }
 .location-chip {
@@ -361,7 +341,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
     border: 1px solid var(--teacher-chip-border); border-radius: 999px;
 }
 
-/* 선택과목 태그 (교사탭) */
 .subject-tag {
     display: inline-block; width: 22px; height: 22px; line-height: 22px;
     text-align: center; border-radius: 50%; color: white;
@@ -377,14 +356,14 @@ td .details { margin-top: 6px; line-height: 1.3; }
 
 /* 교사 사이드바 */
 .teacher-layout { display: flex; gap: 20px; align-items: flex-start; }
-.teacher-sidebar { 
-    width: 250px; 
+.teacher-sidebar {
+    width: 250px;
     min-width: 250px;
-    display: flex; 
-    flex-direction: column; 
-    background: var(--surface-soft); 
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-soft);
     border: 1px solid var(--border-color);
-    border-radius: 12px; 
+    border-radius: 12px;
     position: sticky;
     top: 20px;
     overflow: hidden;
@@ -475,7 +454,7 @@ td .details { margin-top: 6px; line-height: 1.3; }
 .student-list-table th, .student-list-table td { padding: 3px 8px; border-bottom: 1px solid var(--line-soft); border-right: 0; line-height: 1.15; font-size: 12.5px; }
 .student-list-table th { position: sticky; top: 0; z-index: 1; background: var(--surface-soft); font-weight: 700; padding: 8px; }
 
-/* 교체/보강 모달 (교사탭) */
+/* 교체/보강 모달 */
 .swap-modal-overlay {
     position: fixed; top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0,0,0,0.5); display: none; justify-content: center;
@@ -496,7 +475,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
 .swap-close-btn:hover { color: var(--primary-color); }
 .swap-modal-body { padding: 25px; overflow-y: auto; background: var(--card-background); }
 
-/* 교체 모달 탭 */
 .swap-modal-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
 .swap-modal-tab {
     flex: 1; padding: 12px 16px; text-align: center; font-size: 14px;
@@ -512,7 +490,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
 .swap-tab-content { display: none; }
 .swap-tab-content.active { display: block; }
 
-/* 교체 결과 */
 .result-section { margin-bottom: 25px; }
 .result-section h4 {
     margin: 0 0 15px 0; color: var(--primary-color); font-size: 1.1em;
@@ -544,7 +521,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
     font-size: 14px; border-radius: 4px; line-height: 1.5;
 }
 
-/* 다자간 순환 교체 */
 .multi-filter-box {
     background: var(--surface-soft); border: 1px solid var(--border-color);
     border-radius: 10px; padding: 14px 16px; margin-bottom: 18px;
@@ -593,7 +569,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
     border: 1px dashed var(--border-color); line-height: 1.7;
 }
 
-/* 로딩 스피너 */
 .loading-spinner {
     display: flex; align-items: center; justify-content: center;
     padding: 40px; gap: 12px; color: var(--subtle-text); font-size: 15px;
@@ -606,17 +581,14 @@ td .details { margin-top: 6px; line-height: 1.3; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-/* 반별 인쇄 */
 .class-schedule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px; }
 .student-card { background: var(--card-background); border: 1px solid var(--border-color); border-radius: 10px; padding: 15px; }
 .student-card h4 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.1em; }
 
-/* 빈 상태 */
 .empty-state { text-align: center; padding: 78px 20px; }
 .empty-state-icon { margin-bottom: 18px; opacity: 0.45; color: var(--subtle-text); font-size: 4em; }
 .empty-state h3 { margin: 0; color: var(--subtle-text); font-weight: 500; }
 
-/* 푸터 */
 .footer-credit {
     text-align: center; margin-top: 40px; padding-top: 20px;
     border-top: 1px solid var(--border-color); color: var(--subtle-text);
@@ -624,7 +596,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
 }
 .footer-credit p { margin: 0; }
 
-/* 학생목록 버튼 */
 .student-list-btn {
     padding: 4px 10px; border: 1px solid var(--border-color);
     border-radius: 999px; background: var(--card-background);
@@ -642,22 +613,22 @@ td .details { margin-top: 6px; line-height: 1.3; }
 .elective-subject-line { display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
 
 /* ========================================
-   교사별 탭 레이아웃 (테마 색상, 사이드바 스크롤, 표 높이 동기화)
+   교사별 탭 레이아웃
    ======================================== */
-.teacher-layout { 
-    display: flex; 
+.teacher-layout {
+    display: flex;
     align-items: flex-start;
-    gap: 20px; 
+    gap: 20px;
     min-height: 600px;
 }
-.teacher-sidebar { 
-    width: 250px; 
+.teacher-sidebar {
+    width: 250px;
     min-width: 250px;
-    display: flex; 
-    flex-direction: column; 
-    background: var(--surface-soft); 
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-soft);
     border: 1px solid var(--border-color);
-    border-radius: 12px; 
+    border-radius: 12px;
     position: sticky;
     top: 20px;
     max-height: calc(100vh - 120px);
@@ -670,13 +641,12 @@ td .details { margin-top: 6px; line-height: 1.3; }
     border-radius: 12px 12px 0 0;
     flex-shrink: 0;
 }
-.teacher-sidebar-list { 
-    flex: 1; 
-    overflow-y: auto; 
+.teacher-sidebar-list {
+    flex: 1;
+    overflow-y: auto;
     padding: 8px 12px;
 }
 
-/* 사이드바 테마 색상 */
 .teacher-sidebar-item.active {
     background-color: var(--primary-color) !important;
     color: white !important;
@@ -687,14 +657,13 @@ td .details { margin-top: 6px; line-height: 1.3; }
     background-color: white !important;
 }
 
-.teacher-main-content { 
-    flex: 1; 
-    min-width: 0; 
-    display: flex; 
-    flex-direction: column; 
+.teacher-main-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-/* 교사 시간표 전용 테이블 래퍼 */
 .teacher-table-wrap {
     border: 1px solid var(--border-color);
     border-radius: 16px;
@@ -739,7 +708,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
     vertical-align: middle;
 }
 
-/* 교시 라벨 */
 .period-label {
     height: 110px;
     min-height: 110px;
@@ -761,7 +729,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
     font-weight: 500;
 }
 
-/* 수업 있는 셀 — 항상 흰색 배경 */
 .teacher-subject-cell {
     height: 110px;
     min-height: 110px;
@@ -785,21 +752,17 @@ td .details { margin-top: 6px; line-height: 1.3; }
     padding: 6px 4px;
 }
 
-/* 수업이 있는 행만 hover 하이라이트 (교시 라벨 + 수업 셀만, 빈 셀 제외) */
 .teacher-table-wrap tbody tr:hover .period-label,
 .teacher-table-wrap tbody tr:hover .teacher-subject-cell {
     background: var(--row-hover) !important;
 }
-/* 빈 셀은 hover 영향 받지 않음 — 별도 지정 불필요 (위 규칙에 포함 안 됨) */
 
-/* 클릭 가능 셀 개별 hover (교체 찾기 툴팁) */
 .teacher-subject-cell.clickable-cell:hover {
     background-color: var(--empty-bg) !important;
     box-shadow: inset 0 0 0 2px var(--primary-color);
     z-index: 10;
 }
 
-/* 공강/빈 셀 — 수업 셀보다 진한 색으로 시각 분리 */
 .teacher-empty-period {
     height: 110px;
     min-height: 110px;
@@ -807,6 +770,164 @@ td .details { margin-top: 6px; line-height: 1.3; }
     background: var(--empty-bg) !important;
     vertical-align: middle;
     overflow: hidden;
+}
+
+/* ========================================
+   수업별 탭 레이아웃
+   ======================================== */
+.subject-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    min-height: 600px;
+}
+.subject-sidebar {
+    width: 250px;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    background: var(--surface-soft);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 120px);
+    overflow: hidden;
+}
+.subject-sidebar-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--surface-soft);
+    border-radius: 12px 12px 0 0;
+    flex-shrink: 0;
+}
+.subject-sidebar-search { position: relative; margin-bottom: 0; }
+.subject-sidebar-search input {
+    width: 100%; padding: 10px 12px 10px 36px;
+    border: 1px solid var(--border-color); border-radius: 10px;
+    font-size: 13px; background: var(--card-background); color: var(--text-color);
+    outline: none; box-sizing: border-box; font-family: inherit;
+}
+.subject-sidebar-search input:focus { border-color: var(--primary-color); }
+.subject-sidebar-search .sidebar-search-icon {
+    position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+    color: var(--subtle-text); pointer-events: none; display: flex;
+}
+.subject-sidebar-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 12px;
+}
+.subject-sidebar-list::-webkit-scrollbar { width: 4px; }
+.subject-sidebar-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+.subject-grade-label {
+    font-size: 12px; font-weight: 700; color: var(--subtle-text);
+    text-transform: uppercase; letter-spacing: 0.04em;
+    padding: 10px 8px 6px; user-select: none;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; border-radius: 6px; transition: background 0.15s;
+}
+.subject-grade-label:hover { background: var(--row-hover); }
+.subject-grade-label .grade-toggle {
+    font-size: 10px; transition: transform 0.2s; display: inline-block;
+}
+.subject-grade-label.collapsed .grade-toggle { transform: rotate(-90deg); }
+.subject-grade-group { overflow: hidden; transition: max-height 0.3s ease; }
+.subject-grade-group.collapsed { max-height: 0 !important; overflow: hidden; }
+.subject-sidebar-item {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    padding: 9px 12px; border: none; border-radius: 9px;
+    background: transparent; color: var(--text-color);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 0.15s; text-align: left; line-height: 1.3;
+    box-sizing: border-box; font-family: inherit;
+}
+.subject-sidebar-item:hover { background: var(--row-hover); }
+.subject-sidebar-item.active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    font-weight: 600;
+}
+.subject-sidebar-item .subject-count-badge {
+    font-size: 11px; background: var(--border-color); color: var(--subtle-text);
+    padding: 1px 7px; border-radius: 999px; margin-left: auto; font-weight: 600;
+}
+.subject-sidebar-item.active .subject-count-badge {
+    background: rgba(255,255,255,0.25); color: white;
+}
+.subject-sidebar-divider {
+    height: 1px; background: var(--border-color); margin: 4px 8px 8px;
+}
+.subject-main-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+.subject-cell-entry {
+    padding: 4px 2px;
+    text-align: center;
+}
+.subject-cell-entry + .subject-cell-entry {
+    border-top: 1px dashed var(--line-soft);
+    margin-top: 4px;
+    padding-top: 6px;
+}
+.subject-table-wrap {
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--card-background);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.subject-table-wrap table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+    table-layout: fixed;
+    margin: 0;
+}
+.subject-table-wrap th, .subject-table-wrap td {
+    text-align: center;
+    vertical-align: middle;
+    border-right: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+    padding: 8px 6px;
+    line-height: 1.45;
+    color: var(--text-color);
+}
+.subject-table-wrap thead th {
+    background: var(--header-bg);
+    color: var(--header-text);
+    font-weight: 700;
+    padding: 12px 8px;
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+}
+.subject-table-wrap th:last-child,
+.subject-table-wrap td:last-child { border-right: 0; }
+.subject-table-wrap tbody tr:last-child td { border-bottom: 0; }
+.subject-table-wrap tbody tr { height: 110px; }
+.subject-table-wrap tbody td {
+    height: 110px; min-height: 110px; max-height: 110px;
+    vertical-align: middle; overflow: hidden;
+}
+.subject-table-wrap .period-label {
+    height: 110px; min-height: 110px; max-height: 110px;
+}
+.subject-table-wrap .subject-empty-period {
+    height: 110px; min-height: 110px; max-height: 110px;
+    background: var(--empty-bg) !important;
+    vertical-align: middle; overflow: hidden;
+}
+.subject-table-wrap .subject-filled-cell {
+    height: 110px; min-height: 110px; max-height: 110px;
+    background: var(--card-background) !important;
+    vertical-align: middle; overflow: hidden; padding: 4px 3px;
+}
+.subject-table-wrap tbody tr:hover .period-label,
+.subject-table-wrap tbody tr:hover .subject-filled-cell {
+    background: var(--row-hover) !important;
 }
 
 /* 반응형 */
@@ -826,13 +947,16 @@ td .details { margin-top: 6px; line-height: 1.3; }
     .teacher-table-wrap { border-radius: 12px; }
     .teacher-sidebar-list { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 12px 12px; max-height: 160px; overflow-y: auto; }
     .teacher-sidebar-item { padding: 7px 12px; border-radius: 999px; font-size: 13px; border: 1px solid var(--border-color); background: var(--card-background); width: auto; }
+    .subject-layout { flex-direction: column; }
+    .subject-sidebar { width: 100%; min-width: 0; max-height: none; position: static; border-radius: 12px; }
+    .subject-sidebar-list { max-height: 200px; overflow-y: auto; }
     .cycle-flow { flex-direction: column; }
     .cycle-arrow { transform: rotate(90deg); }
     .result-list { grid-template-columns: 1fr; }
 }
 
 /* ============================================================
-   인쇄 — 화면 디자인 충실 재현 + 깔끔한 PDF
+   인쇄
    ============================================================ */
 @page {
     size: A4 portrait;
@@ -840,13 +964,11 @@ td .details { margin-top: 6px; line-height: 1.3; }
 }
 
 @media print {
-    /* ── 1. 색상 강제 출력 ── */
     * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
-    /* ── 2. 배경/컨테이너 초기화 ── */
     body {
         background: #fff !important;
         padding: 0 !important;
@@ -863,12 +985,12 @@ td .details { margin-top: 6px; line-height: 1.3; }
         box-shadow: none !important;
     }
 
-    /* ── 3. UI 전용 요소 완전 숨김 ── */
     #search-section,
     .tab-navigation,
     .clock-container,
     .footer-credit,
     .teacher-sidebar,
+    .subject-sidebar,
     .swap-modal-overlay,
     .student-list-modal,
     .schedule-actions,
@@ -882,7 +1004,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         display: none !important;
     }
 
-    /* ── 4. 제목 — 잘림 방지 ── */
     h1 {
         font-size: 14pt !important;
         margin-bottom: 3mm !important;
@@ -908,7 +1029,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         padding: 2px 8px !important;
     }
 
-    /* ── 5. 오늘/현재교시 하이라이트 — 인쇄 시 완전 제거 ── */
     .today-header {
         background: var(--header-bg) !important;
         color: var(--header-text) !important;
@@ -945,17 +1065,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
     tbody tr:nth-child(even) .current-period-cell:not(.empty-cell) {
         background: var(--row-alt) !important;
     }
-    .current-period-label {
-        background: var(--card-background) !important;
-    }
-    .current-period-cell {
-        background: var(--card-background) !important;
-        box-shadow: none !important;
-    }
-    .current-period-cell.today-cell {
-        background: var(--card-background) !important;
-        box-shadow: none !important;
-    }
     tbody td.clickable-cell::after {
         display: none !important;
     }
@@ -964,25 +1073,24 @@ td .details { margin-top: 6px; line-height: 1.3; }
         box-shadow: none !important;
     }
 
-    /* ── 6. 테이블 공통 — 라운드 모서리 유지 + 화면 비율 재현 ── */
     .table-container,
-    .teacher-table-wrap {
+    .teacher-table-wrap,
+    .subject-table-wrap {
         overflow: visible !important;
         width: 100% !important;
         max-width: 100% !important;
         box-shadow: none !important;
-        /* ★ 라운드 모서리 유지 */
         border-radius: 14px !important;
         border: 1px solid #b0b8c8 !important;
     }
     table,
-    .teacher-table-wrap table {
+    .teacher-table-wrap table,
+    .subject-table-wrap table {
         width: 100% !important;
         min-width: 0 !important;
         font-size: 9.5pt !important;
     }
 
-    /* sticky 해제 — 인쇄 시 헤더 겹침 방지 */
     thead th {
         position: static !important;
     }
@@ -990,14 +1098,12 @@ td .details { margin-top: 6px; line-height: 1.3; }
         position: static !important;
     }
 
-    /* 헤더 라운드 유지 */
     thead tr:first-child th:first-child {
         border-top-left-radius: 13px !important;
     }
     thead tr:first-child th:last-child {
         border-top-right-radius: 13px !important;
     }
-    /* 마지막 행 라운드 */
     tbody tr:last-child td:first-child {
         border-bottom-left-radius: 13px !important;
     }
@@ -1005,7 +1111,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         border-bottom-right-radius: 13px !important;
     }
 
-    /* ── 7. 학생별/교실별 일반 테이블 — 셀 고정 높이 ── */
     tbody td {
         height: 68px !important;
         min-height: 68px !important;
@@ -1017,7 +1122,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         padding: 8px 4px !important;
     }
 
-    /* 과목명/칩 인쇄 크기 */
     td .subject-name {
         font-size: 9.5pt !important;
         margin-bottom: 2px !important;
@@ -1045,12 +1149,10 @@ td .details { margin-top: 6px; line-height: 1.3; }
         margin: 4px 0 !important;
     }
 
-    /* 벨타임 */
     .bell-time {
         font-size: 8pt !important;
     }
 
-    /* ── 8. 교사별 레이아웃 — 사이드바 제거 + 셀 균일 높이 ── */
     .teacher-layout {
         display: block !important;
     }
@@ -1062,14 +1164,13 @@ td .details { margin-top: 6px; line-height: 1.3; }
         cursor: default !important;
     }
 
-    /* ★ 교사 테이블 셀 균일 높이 — 내용에 관계없이 동일 */
     .teacher-table-wrap tbody tr {
         height: 80px !important;
     }
     .teacher-table-wrap tbody td,
     .teacher-subject-cell,
     .teacher-empty-period,
-    .period-label {
+    .teacher-table-wrap .period-label {
         height: 80px !important;
         min-height: 80px !important;
         max-height: 80px !important;
@@ -1087,7 +1188,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         font-size: 8pt !important;
     }
 
-    /* 교사 테이블 라운드 */
     .teacher-table-wrap {
         border-radius: 14px !important;
         border: 1px solid #b0b8c8 !important;
@@ -1105,7 +1205,46 @@ td .details { margin-top: 6px; line-height: 1.3; }
         border-bottom-right-radius: 13px !important;
     }
 
-    /* ── 9. 반별 일반 인쇄 — 학생별 페이지 분리 ── */
+    /* 수업별 탭 인쇄 */
+    .subject-layout {
+        display: block !important;
+    }
+    .subject-main-content {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .subject-table-wrap {
+        border-radius: 14px !important;
+        border: 1px solid #b0b8c8 !important;
+    }
+    .subject-table-wrap tbody tr {
+        height: 80px !important;
+    }
+    .subject-table-wrap tbody td,
+    .subject-table-wrap .subject-filled-cell,
+    .subject-table-wrap .subject-empty-period,
+    .subject-table-wrap .period-label {
+        height: 80px !important;
+        min-height: 80px !important;
+        max-height: 80px !important;
+        overflow: hidden !important;
+    }
+    .subject-table-wrap thead th {
+        position: static !important;
+    }
+    .subject-table-wrap thead tr:first-child th:first-child {
+        border-top-left-radius: 13px !important;
+    }
+    .subject-table-wrap thead tr:first-child th:last-child {
+        border-top-right-radius: 13px !important;
+    }
+    .subject-table-wrap tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 13px !important;
+    }
+    .subject-table-wrap tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 13px !important;
+    }
+
     .class-schedule-print-container {
         display: block !important;
     }
@@ -1119,7 +1258,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         page-break-before: auto !important;
     }
 
-    /* ── 10. ★ 포켓사이즈 인쇄 — 한 장에 4명, 화면 비율 유지 ── */
     body.pocket-size h1,
     body.pocket-size .schedule-header:first-of-type {
         display: none !important;
@@ -1159,7 +1297,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         box-sizing: border-box !important;
         overflow: hidden !important;
     }
-    /* 포켓 — 학생명 헤더 */
     body.pocket-size .student-print-page .schedule-header {
         display: flex !important;
         margin-bottom: 0.5mm !important;
@@ -1174,7 +1311,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         display: none !important;
     }
 
-    /* 포켓 — 테이블 */
     body.pocket-size .student-print-page .table-container {
         border-radius: 4px !important;
         box-shadow: none !important;
@@ -1201,13 +1337,11 @@ td .details { margin-top: 6px; line-height: 1.3; }
         overflow: hidden !important;
         vertical-align: middle !important;
     }
-    /* 포켓 — 교시 열 */
     body.pocket-size .student-print-page tbody td:first-child {
         font-size: 6pt !important;
         font-weight: 600 !important;
     }
 
-    /* ★ 포켓 — 과목명 (기본 3~4글자: 7pt, 줄바꿈 없음) */
     body.pocket-size .student-print-page .subject-name {
         font-size: 7pt !important;
         font-weight: 700 !important;
@@ -1218,7 +1352,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         text-overflow: ellipsis !important;
     }
 
-    /* ★ 5글자 이상 긴 과목명 — JS에서 .subject-long 클래스 부여 시 축소 */
     body.pocket-size .student-print-page .subject-name.subject-long {
         font-size: 5.8pt !important;
         letter-spacing: -0.3pt !important;
@@ -1229,7 +1362,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         gap: 0.5mm !important;
         line-height: 1 !important;
     }
-    /* ★ 강의실·교사 칩 — 과목명과의 비율 유지 (과목 7pt 기준 약 70%) */
     body.pocket-size .student-print-page .location-chip,
     body.pocket-size .student-print-page .teacher-name {
         font-size: 5pt !important;
@@ -1241,7 +1373,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         line-height: 1.15 !important;
         white-space: nowrap !important;
     }
-    /* ★ 분반 칩 — 여백 최소화, 과목명과 밀착 */
     body.pocket-size .student-print-page .elective-class-badge {
         font-size: 4pt !important;
         padding: 0 2px !important;
@@ -1265,7 +1396,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         margin-right: 1px !important;
     }
 
-    /* ★ 포켓 — 분반칩 + 긴 교과명(5글자+) 조합: 한 줄 강제 + 잘림 완전 방지 */
     body.pocket-size .student-print-page .elective-subject-line.elective-long {
         gap: 0px !important;
         flex-wrap: nowrap !important;
@@ -1294,7 +1424,6 @@ td .details { margin-top: 6px; line-height: 1.3; }
         margin-right: 1.5px !important;
     }
 
-    /* 포켓 — 라운드 유지 */
     body.pocket-size .student-print-page thead tr:first-child th:first-child {
         border-top-left-radius: 3px !important;
     }
@@ -1371,7 +1500,25 @@ function generateOutputHtml(options) {
         </div>
     </div>
 
-    <!-- 교체/보강 모달 (교사탭) -->
+    <!-- 수업별 상세 모달 -->
+    <div id="subject-cell-modal" class="student-list-modal" aria-hidden="true">
+        <div class="student-list-modal-backdrop" onclick="closeSubjectCellModal()"></div>
+        <div class="student-list-modal-dialog">
+            <div class="student-list-modal-header">
+                <div>
+                    <h3 id="subject-cell-modal-title">수업 목록</h3>
+                    <div id="subject-cell-modal-meta">총 0개 수업</div>
+                </div>
+                <button class="modal-close-btn" onclick="closeSubjectCellModal()">&times;</button>
+            </div>
+            <div id="subject-cell-modal-body" class="student-list-modal-body"></div>
+            <div class="student-list-modal-footer">
+                <button class="modal-secondary-btn" onclick="closeSubjectCellModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 교체/보강 모달 -->
     <div id="swap-modal" class="swap-modal-overlay" onclick="if(event.target===this) closeSwapModal()">
         <div class="swap-modal-content">
             <div class="swap-modal-header">
@@ -1403,6 +1550,7 @@ function generateOutputHtml(options) {
     ${features.class ? generateClassTabJS() : ''}
     ${features.classroom ? generateClassroomTabJS() : ''}
     ${features.teacher ? generateTeacherTabJS() : ''}
+    ${features.subject ? generateSubjectTabJS() : ''}
     ${generateInitJS(features)}
     <\/script>
 </body>
@@ -1421,23 +1569,19 @@ function generateCommonJS() {
     let favorites = JSON.parse(localStorage.getItem('favStudents') || '[]');
     let teacherFavorites = JSON.parse(localStorage.getItem('favTeachers') || '[]');
 
-    // 학생 uniqueId 부여
     allStudents.forEach(s => {
         if (!s.uniqueId) s.uniqueId = s.name + '||' + s.homeroom + '||' + s.number;
     });
 
-    // 교사명 → 데이터 맵
     const teacherMap = {};
     allTeacherSchedules.forEach(t => { teacherMap[t.name] = t; });
 
-    // 반별 데이터
     const classData = {};
     allStudents.forEach(s => {
         if (!classData[s.homeroom]) classData[s.homeroom] = [];
         classData[s.homeroom].push(s);
     });
 
-    // 학생명 인덱스
     const studentIndexByName = {};
     allStudents.forEach(s => {
         const name = String(s.name || '').trim();
@@ -1451,7 +1595,6 @@ function generateCommonJS() {
         studentIndexByName[name].push({ name, homeroom: s.homeroom||'', number: s.number||'', studentId: sid });
     });
 
-    // 학생목록 저장소
     const studentListStore = {};
     let studentListCounter = 0;
     function registerStudentList(payload) {
@@ -1466,7 +1609,6 @@ function generateCommonJS() {
     }
 
     function resolveStudentRows(names, uniqueIds) {
-        // uniqueIds가 있으면 정확한 매칭, 없으면 기존 방식 (하위 호환)
         if (uniqueIds && uniqueIds.length === (names||[]).length) {
             return uniqueIds.map(function(uid, idx) {
                 const s = allStudents.find(function(x) { return x.uniqueId === uid; });
@@ -1505,7 +1647,6 @@ function generateCommonJS() {
         return String(n||'목록').replace(/[\\\\\\/:\\*\\?"<>|]/g,'_').replace(/\\s+/g,'_').slice(0,80)||'목록';
     }
 
-    // 시계
     function updateClock() {
         const now = new Date();
         const days = ['일','월','화','수','목','금','토'];
@@ -1516,7 +1657,6 @@ function generateCommonJS() {
     }
     setInterval(updateClock, 1000); updateClock();
 
-    // 학생목록 모달
     function openStudentListModal(listId) {
         const payload = studentListStore[listId];
         const modal = document.getElementById('student-list-modal');
@@ -1562,7 +1702,6 @@ function generateCommonJS() {
         }
     }
 
-    // 교실명 정규화
     function normalizeClassroomName(cr) {
         if (!cr) return '';
         const s = String(cr).trim();
@@ -1730,12 +1869,11 @@ function generateStudentTabJS() {
         }
         html += '</tbody></table></div>';
         scheduleContainer.innerHTML = html;
-        // ★ 포켓사이즈용: 분반칩 + 5글자이상 교과명 → .elective-long 클래스 부여
         scheduleContainer.querySelectorAll('.elective-subject-line').forEach(function(line) {
             var subjEl = line.querySelector('.subject-name');
             var badgeEl = line.querySelector('.elective-class-badge');
             if (subjEl && badgeEl) {
-                var text = subjEl.textContent.replace(/\s/g, '');
+                var text = subjEl.textContent.replace(/\\s/g, '');
                 if (text.length >= 5) {
                     line.classList.add('elective-long');
                 }
@@ -1754,7 +1892,6 @@ function generateClassTabJS() {
     function setupClassView() {
         const section = document.getElementById('search-section');
         section.style.display = '';
-        // 반 정렬 (2-1, 2-2, 2-10 순서대로 정렬)
         const classList = Object.keys(classData).sort((a, b) => {
             const [g1, c1] = a.split('-').map(Number);
             const [g2, c2] = b.split('-').map(Number);
@@ -1866,8 +2003,7 @@ function generateClassroomTabJS() {
     function buildClassroomData() {
         classroomData = {};
         const days = ['월','화','수','목','금'];
-        
-        // 1. 학생 선택과목 데이터에서 교실 추출
+
         allStudents.forEach(student => {
             days.forEach(day => {
                 for (let i = 0; i < student.maxPeriods; i++) {
@@ -1903,7 +2039,6 @@ function generateClassroomTabJS() {
             });
         });
 
-        // 2. 전체 교사 시간표에서 추가 교실(1, 3학년 및 일반 교과) 추출
         allTeacherSchedules.forEach(teacher => {
             days.forEach(day => {
                 for (let i = 0; i < 7; i++) {
@@ -1918,7 +2053,6 @@ function generateClassroomTabJS() {
                         loc = m[1].trim(); subj = m[2].trim();
                     }
 
-                    // 1-1, 2-3 형식 또는 101, 203 형식 모두 인식
                     if (loc && (loc.match(/^\\d+-\\d+$/) || loc.match(/^\\d{3}$/))) {
                         let normalizedLoc = normalizeClassroomName(loc);
                         const pk = day + (i+1);
@@ -1959,16 +2093,15 @@ function generateClassroomTabJS() {
         if (Object.keys(classroomData).length === 0) buildClassroomData();
         const section = document.getElementById('search-section');
         section.style.display = '';
-        
-        // 정렬: 1~3학년 교실이 먼저, 그 다음 특별실(가나다순)
+
         const rooms = Object.keys(classroomData).sort((a,b) => {
             const matchA = a.match(/^(\\d)(\\d{2})$/);
             const matchB = b.match(/^(\\d)(\\d{2})$/);
-            const ga = matchA ? parseInt(matchA[1]) : 99; // 특별실은 99로 후순위 배치
+            const ga = matchA ? parseInt(matchA[1]) : 99;
             const ca = matchA ? parseInt(matchA[2]) : 0;
             const gb = matchB ? parseInt(matchB[1]) : 99;
             const cb = matchB ? parseInt(matchB[2]) : 0;
-            
+
             if (ga !== gb) return ga - gb;
             if (ca !== cb) return ca - cb;
             return a.localeCompare(b);
@@ -2080,16 +2213,9 @@ function generateClassroomTabJS() {
 // ================================================================
 
 function generateTeacherTabJS() {
-    // NOTE: This function returns a JS template literal string.
-    // ESCAPING RULES inside the returned template literal:
-    //   \\\\  → \\  in output  (one literal backslash)
-    //   \\'   → \'  in output  (escaped single quote, safe inside single-quoted strings)
-    //   All HTML-building strings use double-quotes " for outer delimiter
-    //   to avoid single-quote conflicts entirely.
     return `
     let activeTeacherId = "";
 
-    // ─── Cell Cache: built once on tab load ───────────────────────
     const _cellCache = {};
 
     function buildCellCache() {
@@ -2115,7 +2241,6 @@ function generateTeacherTabJS() {
     function _resolveCell(teacherName, day, pi, rawCell) {
         var clean = String(rawCell || "").replace(/_x000D_/g, "").replace(/[\\r\\n]/g, " ").trim();
 
-        // rawCell에서 교실번호 추출
         var rawLocation = "";
         var rawFirstWord = "";
         var rawMatchResult = clean.match(/^(\\S+)\\s/);
@@ -2134,11 +2259,9 @@ function generateTeacherTabJS() {
             var sCell = (s.schedule[day] && s.schedule[day][pi]) ? s.schedule[day][pi] : "";
             if (!sCell) continue;
 
-            // 교사명 매칭
-            if (sCell.indexOf(">" + teacherName + "<") === -1 && 
+            if (sCell.indexOf(">" + teacherName + "<") === -1 &&
                 sCell.indexOf('teacher-name">' + teacherName + "<") === -1) continue;
 
-            // 교실 매칭: 학생 셀의 location-chip 또는 홈룸과 비교
             if (rawLocation) {
                 var studentLocMatch = sCell.match(/<span class="location-chip">([^<]+)<\\/span>/);
                 if (studentLocMatch) {
@@ -2218,7 +2341,6 @@ function generateTeacherTabJS() {
         };
     }
 
-    // 공강은 실제 근무시간(임장지도)이므로 isFree = false
     function isFree(tData, day, pi) {
         const cell = getCachedCell(tData.name, day, pi);
         return !cell || String(cell).trim() === "";
@@ -2305,7 +2427,6 @@ function generateTeacherTabJS() {
         return { html: html, style: cellStyle, isEmpty: false };
     }
 
-    // ─── Multi-swap cycle finder (3인 + 4인, cache-based) ──────────
     function findMultiSwapCycles(targetName, targetDay, targetPi, maxDepth) {
         const target = teacherMap[targetName];
         if (!target) return [];
@@ -2390,7 +2511,6 @@ function generateTeacherTabJS() {
 
     let _multiSwapAll = [], _multiSwapClass = "";
 
-    // ─── Swap modal ────────────────────────────────────────────────
     function openSwapModal(tName, tDay, tPi) {
         const tData = teacherMap[tName];
         if (!tData) return;
@@ -2590,7 +2710,6 @@ function generateTeacherTabJS() {
     }
     function closeSwapModal() { document.getElementById("swap-modal").style.display = "none"; }
 
-    // ─── Sidebar ──────────────────────────────────────────────────
     function buildTeacherSidebar() {
         removeTeacherSidebar();
         const teacherList  = allTeacherSchedules.map(function(t) { return t.name; }).sort();
@@ -2679,7 +2798,6 @@ function generateTeacherTabJS() {
         if (saved && teacherMap[saved]) selectTeacherFromSidebar(saved);
     }
 
-    // ─── Schedule display ─────────────────────────────────────────
     function displayTeacherSchedule(teacherName) {
         const teacher = teacherMap[teacherName];
         if (!teacher) return;
@@ -2760,9 +2878,530 @@ function generateTeacherTabJS() {
     `;
 }
 
+// ================================================================
+// Part 5.5: 수업별 탭 v7 — 슬롯별 강의실 + 모달 개선 + 정렬
+// ================================================================
+
+function generateSubjectTabJS() {
+    return `
+    let activeSubjectKey = "";
+    let subjectIndex = {};
+
+    var subjectNameMap = {};
+    (function buildNameMap() {
+        allStudents.forEach(function(s) {
+            var gradeParts = (s.homeroom || "").split("-");
+            var grade = gradeParts[0] || "";
+            if (!grade) return;
+            ["월","화","수","목","금"].forEach(function(day) {
+                for (var pi = 0; pi < (s.maxPeriods || 7); pi++) {
+                    var c = s.schedule[day] && s.schedule[day][pi];
+                    if (!c) continue;
+                    var sm = c.match(/<div class="subject-name">([^<]+)<\\/div>/);
+                    if (!sm) continue;
+                    var name = sm[1].trim();
+                    var mapKey = grade + "|" + name;
+                    subjectNameMap[mapKey] = true;
+                }
+            });
+        });
+    })();
+
+    function isSpecialSubject(name) {
+        var n = String(name || "").trim();
+        return /^(자율|진로|공강|동아리|자습|창체|봉사|체진|체실|스실|스체|심체|단체|운건|스생|스실)$/.test(n);
+    }
+
+    function buildSubjectIndex() {
+        subjectIndex = {};
+        const days = ["월","화","수","목","금"];
+
+        allTeacherSchedules.forEach(function(teacher) {
+            days.forEach(function(day) {
+                for (var pi = 0; pi < 7; pi++) {
+                    var cell = (teacher.schedule[day] && teacher.schedule[day][pi]) ? teacher.schedule[day][pi] : "";
+                    if (!cell) continue;
+                    var str = String(cell).replace(/_x000D_/g, "").replace(/[\\r\\n]/g, " ").trim();
+                    if (!str) continue;
+
+                    var classMatch = str.match(/^(\\d)(\\d{2})/);
+                    var grade = classMatch ? classMatch[1] : "";
+
+                    var loc = "";
+                    var subj = str;
+                    var wordMatch = str.match(/^(\\S+)\\s+([\\s\\S]+)$/);
+                    if (wordMatch) {
+                        var fw = wordMatch[1];
+                        var isLoc = /^\\d{3,4}/.test(fw) || /^\\d+-\\d+$/.test(fw) || /[실관동]$/.test(fw)
+                                 || fw === "유벤투스" || fw === "도서관" || fw === "사이학교" || fw === "사이공간"
+                                 || fw === "컴퓨터실" || /^다음/.test(fw);
+                        var isNotLoc = /^[A-Z]$/.test(fw) || /^[A-Z]_/.test(fw) || /^[A-Z][0-9]/.test(fw);
+                        if (isLoc && !isNotLoc) {
+                            loc = fw;
+                            subj = wordMatch[2].trim();
+                        }
+                    }
+
+                    var electiveBadge = "";
+                    var elecMatch = subj.match(/^([A-Z][A-Za-z0-9]*)\\s*[_]?\\s*([\\s\\S]+)$/);
+                    if (elecMatch) {
+                        electiveBadge = elecMatch[1];
+                        subj = elecMatch[2].trim();
+                    }
+
+                    if (!subj || !grade) continue;
+                    if (subj === "동아리") continue;
+
+                    var displayLoc = loc;
+                    var roomMatch = loc.match(/^(\\d)(\\d{2})$/);
+                    if (roomMatch) {
+                        displayLoc = roomMatch[1] + "-" + parseInt(roomMatch[2], 10);
+                    }
+
+                    var classroomNum = "";
+                    if (classMatch) {
+                        classroomNum = classMatch[1] + "-" + parseInt(classMatch[2], 10);
+                    }
+
+                    var finalName = subj;
+                    var key = grade + "|" + finalName;
+                    var slotKey = day + "|" + pi;
+
+                    if (!subjectIndex[key]) {
+                        subjectIndex[key] = { grade: grade, name: finalName, entries: {} };
+                    }
+
+                    var entryKey = electiveBadge ? electiveBadge : "_t_" + teacher.name;
+
+                    if (!subjectIndex[key].entries[entryKey]) {
+                        subjectIndex[key].entries[entryKey] = {
+                            electiveClass: electiveBadge,
+                            teacher: teacher.name,
+                            location: displayLoc,
+                            classroom: classroomNum,
+                            slots: {}
+                        };
+                    }
+
+                    subjectIndex[key].entries[entryKey].slots[slotKey] = {
+                        location: displayLoc || subjectIndex[key].entries[entryKey].location || "",
+                        classroom: classroomNum || subjectIndex[key].entries[entryKey].classroom || ""
+                    };
+                }
+            });
+        });
+
+        var renameMap = {};
+        allStudents.forEach(function(s) {
+            var gradeParts = (s.homeroom || "").split("-");
+            var grade = gradeParts[0] || "";
+            if (!grade) return;
+            ["월","화","수","목","금"].forEach(function(day) {
+                for (var pi = 0; pi < (s.maxPeriods || 7); pi++) {
+                    var c = s.schedule[day] && s.schedule[day][pi];
+                    if (!c) continue;
+                    var sm = c.match(/<div class="subject-name">([^<]+)<\\/div>/);
+                    if (!sm) continue;
+                    var studentName = sm[1].trim();
+                    var slotKey = day + "|" + pi;
+                    Object.keys(subjectIndex).forEach(function(key) {
+                        if (!key.startsWith(grade + "|")) return;
+                        var teacherSubjName = key.split("|")[1];
+                        if (teacherSubjName === studentName) return;
+                        Object.keys(subjectIndex[key].entries).forEach(function(ek) {
+                            var entry = subjectIndex[key].entries[ek];
+                            if (entry.slots[slotKey]) {
+                                var tm = c.match(/<span class="teacher-name">([^<]+)<\\/span>/);
+                                if (tm && tm[1].trim() === entry.teacher) {
+                                    var rk = grade + "|" + teacherSubjName;
+                                    if (!renameMap[rk]) renameMap[rk] = studentName;
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+        });
+
+        Object.keys(renameMap).forEach(function(oldKey) {
+            var newName = renameMap[oldKey];
+            var grade = oldKey.split("|")[0];
+            var newKey = grade + "|" + newName;
+            if (subjectIndex[oldKey] && !subjectIndex[newKey]) {
+                subjectIndex[newKey] = subjectIndex[oldKey];
+                subjectIndex[newKey].name = newName;
+                delete subjectIndex[oldKey];
+            } else if (subjectIndex[oldKey] && subjectIndex[newKey]) {
+                Object.keys(subjectIndex[oldKey].entries).forEach(function(ek) {
+                    if (!subjectIndex[newKey].entries[ek]) {
+                        subjectIndex[newKey].entries[ek] = subjectIndex[oldKey].entries[ek];
+                    } else {
+                        Object.keys(subjectIndex[oldKey].entries[ek].slots).forEach(function(sk) {
+                            if (!subjectIndex[newKey].entries[ek].slots[sk]) {
+                                subjectIndex[newKey].entries[ek].slots[sk] = subjectIndex[oldKey].entries[ek].slots[sk];
+                            }
+                        });
+                    }
+                });
+                delete subjectIndex[oldKey];
+            }
+        });
+    }
+
+    function getElectiveSectionCount(info) {
+        var count = 0;
+        Object.keys(info.entries).forEach(function(k) {
+            if (info.entries[k].electiveClass) count++;
+        });
+        return count;
+    }
+
+    function buildSubjectSidebar() {
+        removeSubjectSidebar();
+        if (Object.keys(subjectIndex).length === 0) buildSubjectIndex();
+
+        var gradeMap = {};
+        Object.keys(subjectIndex).forEach(function(key) {
+            var info = subjectIndex[key];
+            var g = info.grade;
+            if (info.name === "동아리") return;
+            if (!gradeMap[g]) gradeMap[g] = [];
+            if (gradeMap[g].indexOf(info.name) === -1) gradeMap[g].push(info.name);
+        });
+
+        var grades = Object.keys(gradeMap).sort(function(a, b) {
+            return parseInt(a) - parseInt(b);
+        });
+
+        grades.forEach(function(g) {
+            gradeMap[g].sort(function(a, b) { return a.localeCompare(b, "ko"); });
+        });
+
+        var listHtml = "";
+        grades.forEach(function(g, gi) {
+            listHtml += "<div class=\\"subject-grade-label\\" data-grade=\\"" + g + "\\" onclick=\\"toggleSubjectGrade(this)\\">" +
+                "<span>" + g + "학년 (" + gradeMap[g].length + "개 교과)</span>" +
+                "<span class=\\"grade-toggle\\">▼</span></div>";
+            listHtml += "<div class=\\"subject-grade-group\\" data-grade-group=\\"" + g + "\\">";
+            gradeMap[g].forEach(function(name) {
+                var key = g + "|" + name;
+                var info = subjectIndex[key];
+                var elecCount = getElectiveSectionCount(info);
+                var countBadge = elecCount > 1 ? "<span class=\\"subject-count-badge\\">" + elecCount + "개 분반</span>" : "";
+                listHtml += "<button class=\\"subject-sidebar-item\\" data-subject-key=\\"" + key + "\\">" +
+                    "<span>▪️ " + name + "</span>" + countBadge + "</button>";
+            });
+            listHtml += "</div>";
+            if (gi < grades.length - 1) listHtml += "<div class=\\"subject-sidebar-divider\\"></div>";
+        });
+
+        var layout = document.createElement("div");
+        layout.className = "subject-layout";
+        layout.id = "subject-layout";
+        layout.innerHTML =
+            "<div class=\\"subject-sidebar\\" id=\\"subject-sidebar\\">" +
+                "<div class=\\"subject-sidebar-header\\"><div class=\\"subject-sidebar-search\\">" +
+                    "<span class=\\"sidebar-search-icon\\">🔍</span>" +
+                    "<input type=\\"text\\" id=\\"subject-sidebar-filter\\" placeholder=\\"교과명 검색...\\">" +
+                "</div></div>" +
+                "<div class=\\"subject-sidebar-list\\" id=\\"subject-sidebar-list\\">" + listHtml + "</div>" +
+            "</div>" +
+            "<div class=\\"subject-main-content\\" id=\\"subject-main-content\\">" +
+                "<div class=\\"empty-state\\"><div class=\\"empty-state-icon\\">📚</div><h3>교과를 선택하세요</h3></div>" +
+            "</div>";
+
+        scheduleContainer.innerHTML = "";
+        scheduleContainer.appendChild(layout);
+        setupSubjectSidebarEvents();
+    }
+
+    function removeSubjectSidebar() {
+        var layout = document.getElementById("subject-layout");
+        if (layout) layout.remove();
+        activeSubjectKey = "";
+    }
+
+    function toggleSubjectGrade(labelEl) {
+        var grade = labelEl.getAttribute("data-grade");
+        var group = document.querySelector(".subject-grade-group[data-grade-group=\\"" + grade + "\\"]");
+        if (!group) return;
+        labelEl.classList.toggle("collapsed");
+        group.classList.toggle("collapsed");
+    }
+
+    function setupSubjectSidebarEvents() {
+        var filter = document.getElementById("subject-sidebar-filter");
+        var list = document.getElementById("subject-sidebar-list");
+        if (!filter || !list) return;
+
+        list.addEventListener("click", function(e) {
+            var item = e.target.closest(".subject-sidebar-item");
+            if (item && item.dataset.subjectKey) {
+                selectSubjectFromSidebar(item.dataset.subjectKey);
+            }
+        });
+
+        filter.addEventListener("input", function() {
+            var q = this.value.trim().toLowerCase();
+            list.querySelectorAll(".subject-sidebar-item").forEach(function(item) {
+                var key = item.dataset.subjectKey || "";
+                var name = key.split("|")[1] || "";
+                item.style.display = (!q || name.toLowerCase().indexOf(q) !== -1) ? "" : "none";
+            });
+            list.querySelectorAll(".subject-grade-label, .subject-sidebar-divider").forEach(function(el) {
+                el.style.display = q.length > 0 ? "none" : "";
+            });
+            list.querySelectorAll(".subject-grade-group").forEach(function(el) {
+                if (q.length > 0) {
+                    el.classList.remove("collapsed");
+                    el.style.maxHeight = "none";
+                } else {
+                    el.style.maxHeight = "";
+                }
+            });
+        });
+    }
+
+    function selectSubjectFromSidebar(key) {
+        activeSubjectKey = key;
+        var list = document.getElementById("subject-sidebar-list");
+        if (list) {
+            list.querySelectorAll(".subject-sidebar-item").forEach(function(item) {
+                item.classList.toggle("active", item.dataset.subjectKey === key);
+            });
+        }
+        displaySubjectSchedule(key);
+    }
+
+    // ★ 변경: 학생목록 모달과 동일한 HTML 구조 + CSS 클래스 사용
+    function openSubjectCellModal(dayName, period, subjectName, sectionsJson) {
+        var sections = JSON.parse(decodeURIComponent(sectionsJson));
+
+        sections.sort(function(a, b) {
+            var parseClass = function(s) {
+                var m = String(s.classroom || s.location || "").match(/(\\d+)-(\\d+)/);
+                if (m) return parseInt(m[1], 10) * 100 + parseInt(m[2], 10);
+                var ec = s.electiveClass || "";
+                if (ec) return ec.charCodeAt(0) + 10000;
+                return 99999;
+            };
+            return parseClass(a) - parseClass(b);
+        });
+
+        var modal = document.getElementById("subject-cell-modal");
+        if (!modal) return;
+
+        document.getElementById("subject-cell-modal-title").textContent =
+            dayName + " " + period + "교시 \\u00B7 " + subjectName;
+        document.getElementById("subject-cell-modal-meta").textContent =
+            "총 " + sections.length + "개 수업";
+
+        var html = '<table class="student-list-table"><thead><tr>' +
+            '<th>교사</th><th>강의실</th>' +
+            '</tr></thead><tbody>';
+
+        sections.forEach(function(sec) {
+            var teacher = sec.teacher || "-";
+            var location = sec.classroom || sec.location || "-";
+            html += '<tr><td>' + teacher + '</td><td>' + location + '</td></tr>';
+        });
+
+        html += '</tbody></table>';
+        document.getElementById("subject-cell-modal-body").innerHTML = html;
+
+        modal.classList.add("open");
+        document.body.classList.add("modal-open");
+    }
+
+    function closeSubjectCellModal() {
+        var modal = document.getElementById("subject-cell-modal");
+        if (!modal) return;
+        modal.classList.remove("open");
+        document.body.classList.remove("modal-open");
+    }
+
+    function displaySubjectSchedule(key) {
+        var info = subjectIndex[key];
+        if (!info) return;
+        clearStudentListStore();
+
+        var days = ["월","화","수","목","금"];
+        var todayIdx = new Date().getDay() - 1;
+        var currentPeriod = -1;
+        (function() {
+            var now = new Date();
+            var nowMin = now.getHours() * 60 + now.getMinutes();
+            for (var p = 1; p <= 7; p++) {
+                var ts = bellSchedule[p];
+                if (!ts) continue;
+                var m = String(ts).match(/(\\d{1,2}):(\\d{2})\\s*[~\\-]\\s*(\\d{1,2}):(\\d{2})/);
+                if (!m) continue;
+                var startMin = parseInt(m[1],10)*60 + parseInt(m[2],10);
+                var endMin = parseInt(m[3],10)*60 + parseInt(m[4],10);
+                if (nowMin >= startMin && nowMin < endMin) { currentPeriod = p; break; }
+            }
+        })();
+
+        var sections = [];
+        Object.keys(info.entries).forEach(function(sKey) {
+            sections.push({ key: sKey, data: info.entries[sKey] });
+        });
+        sections.sort(function(a, b) {
+            var aName = a.data.electiveClass || "zzz_" + a.key;
+            var bName = b.data.electiveClass || "zzz_" + b.key;
+            return aName.localeCompare(bName);
+        });
+
+        var elecCount = getElectiveSectionCount(info);
+        var teacherCount = sections.length;
+        var sectionSummary = "";
+        if (elecCount > 1) {
+            sectionSummary = " <small>(" + elecCount + "개 분반)</small>";
+        } else if (teacherCount > 1) {
+            sectionSummary = " <small>(" + teacherCount + "명 담당)</small>";
+        }
+
+        var html = "<div class=\\"schedule-header\\">" +
+            "<div class=\\"schedule-info\\"><h2>" + info.grade + "학년 " + info.name + sectionSummary + "</h2></div>" +
+            "<div class=\\"schedule-actions\\">" +
+                "<button class=\\"action-btn\\" onclick=\\"window.print()\\">🖨️ 인쇄</button>" +
+            "</div></div>";
+
+        html += "<div class=\\"teacher-table-wrap\\"><table><thead><tr>" +
+            "<th style=\\"font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;\\">교시</th>";
+        days.forEach(function(day, i) {
+            var isToday = i === todayIdx;
+            html += "<th class=\\"" + (isToday ? "today-header" : "") + "\\">" + day +
+                (isToday ? " <span class=\\"today-badge\\">오늘</span>" : "") + "</th>";
+        });
+        html += "</tr></thead><tbody>";
+
+        for (var pi = 0; pi < 7; pi++) {
+            var pNum = pi + 1;
+            var isCurrent = pNum === currentPeriod && todayIdx >= 0 && todayIdx < 5;
+            var timeStr = bellSchedule[pNum]
+                ? "<br><span class=\\"period-time\\">(" + bellSchedule[pNum] + ")</span>" : "";
+            var periodBadge = isCurrent ? " <span class=\\"current-period-badge\\">현재</span>" : "";
+            var periodCls = isCurrent ? "period-label current-period-label" : "period-label";
+
+            html += "<tr><td class=\\"" + periodCls + "\\">" + pNum + "교시" + periodBadge + timeStr + "</td>";
+
+            days.forEach(function(day, di) {
+                var isToday = di === todayIdx;
+                var todayCls = isToday ? " today-cell" : "";
+                var currentCls = isCurrent ? " current-period-cell" : "";
+                var slotKey = day + "|" + pi;
+
+                var slotSections = [];
+                sections.forEach(function(sec) {
+                    if (sec.data.slots[slotKey]) {
+                        var slotInfo = sec.data.slots[slotKey];
+                        slotSections.push({
+                            data: sec.data,
+                            slotLocation: (typeof slotInfo === "object" && slotInfo.location) ? slotInfo.location : sec.data.location,
+                            slotClassroom: (typeof slotInfo === "object" && slotInfo.classroom) ? slotInfo.classroom : sec.data.classroom
+                        });
+                    }
+                });
+
+                if (slotSections.length > 0) {
+                    var cellHtml = "";
+                    var hasElective = slotSections.some(function(s) { return !!s.data.electiveClass; });
+                    var COMPACT_THRESHOLD = 5;
+
+                    if (slotSections.length >= COMPACT_THRESHOLD && !hasElective) {
+                        var modalData = [];
+                        slotSections.forEach(function(sec) {
+                            modalData.push({
+                                electiveClass: sec.data.electiveClass || "",
+                                teacher: sec.data.teacher || "",
+                                location: sec.slotLocation || "",
+                                classroom: sec.slotClassroom || ""
+                            });
+                        });
+                        var encodedData = encodeURIComponent(JSON.stringify(modalData));
+                        var dayLabel = days[di];
+                        cellHtml += "<div style=\\"display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:6px 4px;\\">";
+                        cellHtml += "<div class=\\"subject-name\\" style=\\"margin-bottom:6px;\\">" + info.name + "</div>";
+                        cellHtml += "<button class=\\"student-list-btn\\" onclick=\\"openSubjectCellModal('" + dayLabel + "', " + pNum + ", '" + info.name.replace(/'/g, "\\\\'") + "', '" + encodedData.replace(/'/g, "\\\\'") + "')\\">총 " + slotSections.length + "개 수업</button>";
+                        cellHtml += "</div>";
+
+                    } else if (hasElective) {
+                        cellHtml += "<div style=\\"display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:6px 4px;\\">";
+                        cellHtml += "<div class=\\"subject-name\\" style=\\"margin-bottom:4px;\\">" + info.name + "</div>";
+                        cellHtml += "<div style=\\"display:flex;flex-direction:column;gap:2px;align-items:center;\\">";
+
+                        if (slotSections.length >= COMPACT_THRESHOLD) {
+                            var modalData2 = [];
+                            slotSections.forEach(function(sec) {
+                                modalData2.push({
+                                    electiveClass: sec.data.electiveClass || "",
+                                    teacher: sec.data.teacher || "",
+                                    location: sec.slotLocation || "",
+                                    classroom: sec.slotClassroom || ""
+                                });
+                            });
+                            var encodedData2 = encodeURIComponent(JSON.stringify(modalData2));
+                            var dayLabel2 = days[di];
+                            cellHtml += "<button class=\\"student-list-btn\\" onclick=\\"openSubjectCellModal('" + dayLabel2 + "', " + pNum + ", '" + info.name.replace(/'/g, "\\\\'") + "', '" + encodedData2.replace(/'/g, "\\\\'") + "')\\">총 " + slotSections.length + "개 분반</button>";
+                        } else {
+                            slotSections.forEach(function(sec) {
+                                var line = "";
+                                if (sec.data.electiveClass) line += "<span class=\\"elective-class-badge\\" style=\\"font-size:10px;min-width:20px;height:20px;padding:0 5px;\\">" + sec.data.electiveClass + "</span> ";
+                                if (sec.data.teacher) line += "<span class=\\"teacher-name\\" style=\\"font-size:10px;padding:1px 6px;\\">" + sec.data.teacher + "</span> ";
+                                var locDisplay = sec.slotLocation || sec.data.location || "";
+                                if (locDisplay) line += "<span class=\\"location-chip\\" style=\\"font-size:10px;padding:1px 6px;\\">" + locDisplay + "</span>";
+                                cellHtml += "<div style=\\"display:flex;align-items:center;gap:3px;flex-wrap:nowrap;\\">" + line + "</div>";
+                            });
+                        }
+                        cellHtml += "</div></div>";
+
+                    } else if (slotSections.length === 1) {
+                        var sec = slotSections[0];
+                        cellHtml += "<div style=\\"display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:6px 4px;\\">";
+                        cellHtml += "<div class=\\"subject-name\\" style=\\"margin-bottom:4px;\\">" + info.name + "</div>";
+                        var detailParts = [];
+                        if (sec.data.teacher) detailParts.push("<span class=\\"teacher-name\\">" + sec.data.teacher + "</span>");
+                        var locDisplay1 = sec.slotLocation || sec.data.location || "";
+                        if (locDisplay1) detailParts.push("<span class=\\"location-chip\\">" + locDisplay1 + "</span>");
+                        if (detailParts.length > 0) {
+                            cellHtml += "<div class=\\"details\\">" + detailParts.join(" ") + "</div>";
+                        }
+                        cellHtml += "</div>";
+
+                    } else {
+                        cellHtml += "<div style=\\"display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:6px 4px;\\">";
+                        cellHtml += "<div class=\\"subject-name\\" style=\\"margin-bottom:4px;\\">" + info.name + "</div>";
+                        cellHtml += "<div style=\\"display:flex;flex-direction:column;gap:1px;align-items:center;\\">";
+                        slotSections.forEach(function(sec) {
+                            var line = "";
+                            if (sec.data.teacher) line += "<span class=\\"teacher-name\\" style=\\"font-size:10px;padding:1px 6px;\\">" + sec.data.teacher + "</span>";
+                            var locDisplay2 = sec.slotLocation || sec.data.location || "";
+                            if (locDisplay2) line += " <span class=\\"location-chip\\" style=\\"font-size:10px;padding:1px 5px;\\">" + locDisplay2 + "</span>";
+                            if (line) cellHtml += "<div style=\\"display:flex;align-items:center;gap:2px;\\">" + line + "</div>";
+                        });
+                        cellHtml += "</div></div>";
+                    }
+
+                    html += "<td class=\\"teacher-subject-cell" + todayCls + currentCls + "\\">" + cellHtml + "</td>";
+                } else {
+                    html += "<td class=\\"teacher-empty-period" + todayCls + currentCls + "\\"></td>";
+                }
+            });
+            html += "</tr>";
+        }
+
+        html += "</tbody></table></div>";
+
+        var target = document.getElementById("subject-main-content") || scheduleContainer;
+        target.innerHTML = html;
+    }
+    `;
+}
+
 
 // ================================================================
-// Part 6: 초기화 함수 + export
+// Part 6: 초기화 함수
 // ================================================================
 
 function generateInitJS(features) {
@@ -2771,16 +3410,16 @@ function generateInitJS(features) {
     // 초기화
     // ============================================================
     function showEmptyState() {
-        const icons = { student:'👨‍🎓', class:'👥', classroom:'🏫', teacher:'👨‍🏫' };
-        const labels = { student:'학생 이름을 검색하세요', class:'반을 선택하세요', classroom:'교실을 선택하세요', teacher:'선생님을 선택하세요' };
-        if (currentMode === 'teacher') return; // 사이드바에서 처리
+        const icons = { student:'👨‍🎓', class:'👥', classroom:'🏫', teacher:'👨‍🏫', subject:'📚' };
+        const labels = { student:'학생 이름을 검색하세요', class:'반을 선택하세요', classroom:'교실을 선택하세요', teacher:'선생님을 선택하세요', subject:'교과를 선택하세요' };
+        if (currentMode === 'teacher' || currentMode === 'subject') return;
         scheduleContainer.innerHTML = '<div class="empty-state"><div class="empty-state-icon">'+(icons[currentMode]||'🔍')+'</div><h3>'+(labels[currentMode]||'선택하세요')+'</h3></div>';
     }
 
     function initApp() {
         const tabNav = document.getElementById('tab-navigation');
-        const tabIcons = { student:'👨‍🎓', class:'👥', classroom:'🏫', teacher:'👨‍🏫' };
-        const tabLabels = { student:'학생별', class:'반별', classroom:'교실별', teacher:'교사별' };
+        const tabIcons = { student:'👨‍🎓', class:'👥', classroom:'🏫', teacher:'👨‍🏫', subject:'📚' };
+        const tabLabels = { student:'학생별', class:'반별', classroom:'교실별', teacher:'교사별', subject:'수업별' };
         const modes = [];
         const tabsHtml = [];
 
@@ -2788,6 +3427,7 @@ function generateInitJS(features) {
         ${features.class ? "modes.push('class'); tabsHtml.push('<button class=\"tab-button\" data-mode=\"class\">'+tabIcons.class+' '+tabLabels.class+'</button>');" : ''}
         ${features.classroom ? "modes.push('classroom'); tabsHtml.push('<button class=\"tab-button\" data-mode=\"classroom\">'+tabIcons.classroom+' '+tabLabels.classroom+'</button>');" : ''}
         ${features.teacher ? "modes.push('teacher'); tabsHtml.push('<button class=\"tab-button\" data-mode=\"teacher\">'+tabIcons.teacher+' '+tabLabels.teacher+'</button>');" : ''}
+        ${features.subject ? "modes.push('subject'); tabsHtml.push('<button class=\"tab-button\" data-mode=\"subject\">'+tabIcons.subject+' '+tabLabels.subject+'</button>');" : ''}
 
         if (modes.length === 0) {
             tabNav.innerHTML = '<div style="text-align:center;padding:20px;color:#999;">선택된 조회 기능이 없습니다.</div>';
@@ -2809,9 +3449,8 @@ function generateInitJS(features) {
 
         switchMode();
 
-        // ESC 키 모달 닫기
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') { closeStudentListModal(); closeSwapModal(); }
+            if (e.key === 'Escape') { closeStudentListModal(); closeSwapModal(); closeSubjectCellModal(); }
         });
     }
 
@@ -2819,16 +3458,17 @@ function generateInitJS(features) {
         const section = document.getElementById('search-section');
         closeStudentListModal();
         ${features.teacher ? "removeTeacherSidebar();" : ''}
+        ${features.subject ? "removeSubjectSidebar();" : ''}
 
         switch(currentMode) {
             ${features.student ? "case 'student': section.style.display=''; setupStudentSearch(); showEmptyState(); break;" : ''}
             ${features.class ? "case 'class': section.style.display=''; setupClassView(); showEmptyState(); break;" : ''}
             ${features.classroom ? "case 'classroom': section.style.display=''; setupClassroomView(); showEmptyState(); break;" : ''}
             ${features.teacher ? "case 'teacher': section.style.display='none'; buildTeacherSidebar(); break;" : ''}
+            ${features.subject ? "case 'subject': section.style.display='none'; buildSubjectSidebar(); break;" : ''}
         }
     }
 
-    // 시작
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initApp);
     } else {

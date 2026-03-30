@@ -2914,8 +2914,66 @@ function generateSubjectTabJS() {
 
     function buildSubjectIndex() {
         subjectIndex = {};
-        const days = ["월","화","수","목","금"];
+        var days = ["월","화","수","목","금"];
 
+        // ── Phase 1: 학생 데이터에서 직접 구축 ──
+        allStudents.forEach(function(s) {
+            var gradeParts = (s.homeroom || "").split("-");
+            var grade = gradeParts[0] || "";
+            if (!grade) return;
+
+            days.forEach(function(day) {
+                for (var pi = 0; pi < (s.maxPeriods || 7); pi++) {
+                    var c = s.schedule[day] && s.schedule[day][pi];
+                    if (!c) continue;
+
+                    var snm = c.match(/<div class="subject-name">([^<]+)<\\/div>/);
+                    if (!snm) continue;
+                    var subjectName = snm[1].trim();
+                    if (!subjectName) continue;
+
+                    var ecm = c.match(/<span class="elective-class-name"[^>]*>([^<]+)<\\/span>/);
+                    var tm = c.match(/<span class="teacher-name">([^<]+)<\\/span>/);
+                    var lm = c.match(/<span class="location-chip">([^<]+)<\\/span>/);
+
+                    var badge = ecm ? ecm[1].trim() : "";
+                    var teacher = tm ? tm[1].trim() : "";
+                    var location = lm ? lm[1].trim() : "";
+
+                    var key = grade + "|" + subjectName;
+                    var slotKey = day + "|" + pi;
+
+                    if (!subjectIndex[key]) {
+                        subjectIndex[key] = { grade: grade, name: subjectName, entries: {} };
+                    }
+
+                    var entryKey;
+                    if (badge) {
+                        entryKey = badge + (teacher ? "_" + teacher : "");
+                    } else {
+                        entryKey = "_t_" + teacher;
+                    }
+
+                    if (!subjectIndex[key].entries[entryKey]) {
+                        subjectIndex[key].entries[entryKey] = {
+                            electiveClass: badge,
+                            teacher: teacher,
+                            location: location,
+                            classroom: "",
+                            slots: {}
+                        };
+                    }
+
+                    subjectIndex[key].entries[entryKey].slots[slotKey] = {
+                        location: location || subjectIndex[key].entries[entryKey].location || "",
+                        classroom: "",
+                        teacher: teacher
+                    };
+                }
+            });
+        });
+
+        // ── Phase 2: 교사 시간표에서 보충 (학생 데이터에 없는 고정수업) ──
         allTeacherSchedules.forEach(function(teacher) {
             days.forEach(function(day) {
                 for (var pi = 0; pi < 7; pi++) {
@@ -2926,6 +2984,7 @@ function generateSubjectTabJS() {
 
                     var classMatch = str.match(/^(\\d)(\\d{2})/);
                     var grade = classMatch ? classMatch[1] : "";
+                    if (!grade) continue;
 
                     var loc = "";
                     var subj = str;
@@ -2942,15 +3001,10 @@ function generateSubjectTabJS() {
                         }
                     }
 
-                    var electiveBadge = "";
                     var elecMatch = subj.match(/^([A-Z][A-Za-z0-9]*)\\s*[_]?\\s*([\\s\\S]+)$/);
-                    if (elecMatch) {
-                        electiveBadge = elecMatch[1];
-                        subj = elecMatch[2].trim();
-                    }
+                    if (elecMatch) continue;
 
-                    if (!subj || !grade) continue;
-                    if (subj === "동아리") continue;
+                    if (!subj || subj === "동아리") continue;
 
                     var displayLoc = loc;
                     var roomMatch = loc.match(/^(\\d)(\\d{2})$/);
@@ -2958,24 +3012,47 @@ function generateSubjectTabJS() {
                         displayLoc = roomMatch[1] + "-" + parseInt(roomMatch[2], 10);
                     }
 
-                    var classroomNum = "";
-                    if (classMatch) {
-                        classroomNum = classMatch[1] + "-" + parseInt(classMatch[2], 10);
-                    }
+                    var classroomNum = classMatch ? classMatch[1] + "-" + parseInt(classMatch[2], 10) : "";
 
                     var finalName = subj;
-                    var key = grade + "|" + finalName;
                     var slotKey = day + "|" + pi;
+                    for (var si = 0; si < allStudents.length; si++) {
+                        var st = allStudents[si];
+                        var stGrade = (st.homeroom || "").split("-")[0];
+                        if (stGrade !== grade) continue;
+                        var sc = st.schedule[day] && st.schedule[day][pi];
+                        if (!sc) continue;
+                        if (sc.indexOf("elective-class-name") !== -1) continue;
+                        var stm = sc.match(/<span class="teacher-name">([^<]+)<\\/span>/);
+                        if (stm && stm[1].trim() === teacher.name) {
+                            var ssn = sc.match(/<div class="subject-name">([^<]+)<\\/div>/);
+                            if (ssn) { finalName = ssn[1].trim(); break; }
+                        }
+                    }
+
+                    var key = grade + "|" + finalName;
+
+                    if (subjectIndex[key]) {
+                        var checkKey = "_t_" + teacher.name;
+                        if (subjectIndex[key].entries[checkKey] && subjectIndex[key].entries[checkKey].slots[slotKey]) {
+                            // ★ 이미 등록되었지만 강의실이 없으면 교사 시간표에서 보충
+                            var existingSlot = subjectIndex[key].entries[checkKey].slots[slotKey];
+                            if ((!existingSlot.location || !existingSlot.classroom) && (displayLoc || classroomNum)) {
+                                if (displayLoc && !existingSlot.location) existingSlot.location = displayLoc;
+                                if (classroomNum && !existingSlot.classroom) existingSlot.classroom = classroomNum;
+                            }
+                            continue;
+                        }
+                    }
 
                     if (!subjectIndex[key]) {
                         subjectIndex[key] = { grade: grade, name: finalName, entries: {} };
                     }
 
-                    var entryKey = electiveBadge ? electiveBadge : "_t_" + teacher.name;
-
-                    if (!subjectIndex[key].entries[entryKey]) {
-                        subjectIndex[key].entries[entryKey] = {
-                            electiveClass: electiveBadge,
+                    var entryKey2 = "_t_" + teacher.name;
+                    if (!subjectIndex[key].entries[entryKey2]) {
+                        subjectIndex[key].entries[entryKey2] = {
+                            electiveClass: "",
                             teacher: teacher.name,
                             location: displayLoc,
                             classroom: classroomNum,
@@ -2983,77 +3060,25 @@ function generateSubjectTabJS() {
                         };
                     }
 
-                    subjectIndex[key].entries[entryKey].slots[slotKey] = {
-                        location: displayLoc || subjectIndex[key].entries[entryKey].location || "",
-                        classroom: classroomNum || subjectIndex[key].entries[entryKey].classroom || ""
+                    subjectIndex[key].entries[entryKey2].slots[slotKey] = {
+                        location: displayLoc || "",
+                        classroom: classroomNum || "",
+                        teacher: teacher.name
                     };
                 }
             });
         });
-
-        var renameMap = {};
-        allStudents.forEach(function(s) {
-            var gradeParts = (s.homeroom || "").split("-");
-            var grade = gradeParts[0] || "";
-            if (!grade) return;
-            ["월","화","수","목","금"].forEach(function(day) {
-                for (var pi = 0; pi < (s.maxPeriods || 7); pi++) {
-                    var c = s.schedule[day] && s.schedule[day][pi];
-                    if (!c) continue;
-                    var sm = c.match(/<div class="subject-name">([^<]+)<\\/div>/);
-                    if (!sm) continue;
-                    var studentName = sm[1].trim();
-                    var slotKey = day + "|" + pi;
-                    Object.keys(subjectIndex).forEach(function(key) {
-                        if (!key.startsWith(grade + "|")) return;
-                        var teacherSubjName = key.split("|")[1];
-                        if (teacherSubjName === studentName) return;
-                        Object.keys(subjectIndex[key].entries).forEach(function(ek) {
-                            var entry = subjectIndex[key].entries[ek];
-                            if (entry.slots[slotKey]) {
-                                var tm = c.match(/<span class="teacher-name">([^<]+)<\\/span>/);
-                                if (tm && tm[1].trim() === entry.teacher) {
-                                    var rk = grade + "|" + teacherSubjName;
-                                    if (!renameMap[rk]) renameMap[rk] = studentName;
-                                }
-                            }
-                        });
-                    });
-                }
-            });
-        });
-
-        Object.keys(renameMap).forEach(function(oldKey) {
-            var newName = renameMap[oldKey];
-            var grade = oldKey.split("|")[0];
-            var newKey = grade + "|" + newName;
-            if (subjectIndex[oldKey] && !subjectIndex[newKey]) {
-                subjectIndex[newKey] = subjectIndex[oldKey];
-                subjectIndex[newKey].name = newName;
-                delete subjectIndex[oldKey];
-            } else if (subjectIndex[oldKey] && subjectIndex[newKey]) {
-                Object.keys(subjectIndex[oldKey].entries).forEach(function(ek) {
-                    if (!subjectIndex[newKey].entries[ek]) {
-                        subjectIndex[newKey].entries[ek] = subjectIndex[oldKey].entries[ek];
-                    } else {
-                        Object.keys(subjectIndex[oldKey].entries[ek].slots).forEach(function(sk) {
-                            if (!subjectIndex[newKey].entries[ek].slots[sk]) {
-                                subjectIndex[newKey].entries[ek].slots[sk] = subjectIndex[oldKey].entries[ek].slots[sk];
-                            }
-                        });
-                    }
-                });
-                delete subjectIndex[oldKey];
-            }
-        });
     }
 
     function getElectiveSectionCount(info) {
-        var count = 0;
+        var badges = {};
         Object.keys(info.entries).forEach(function(k) {
-            if (info.entries[k].electiveClass) count++;
+            var entry = info.entries[k];
+            if (entry.electiveClass) {
+                badges[entry.electiveClass] = true;
+            }
         });
-        return count;
+        return Object.keys(badges).length;
     }
 
     function buildSubjectSidebar() {
